@@ -21,12 +21,22 @@ typedef struct _sistema{
 
 //tipo1
 TipoRet DIR(Sistema s);
+TipoRet CREATE();
+TipoRet IF();
+TipoRet TYPE();
 
 //tipo2
+TipoRet DELETE();
+TipoRet BF();
+TipoRet CAT();
 
 //opcionales
+TipoRet IC();
+TipoRet BC();
+TipoRet UNDELETE();
 
 //otras
+void MuestroRetorno(TipoRet ret);
 int tamanio(Archivo a);
 
 
