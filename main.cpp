@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Definiciones.h"
-#include "Funciones.cpp"
+#include "Funciones.cpp" //incluir estas 2 aca puede causar problemas con el namespace std
 
 using namespace std;
 
