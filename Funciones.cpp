@@ -81,5 +81,11 @@ void MuestroRetorno(TipoRet ret)
 
 int tamanio(Archivo a)
 {
-    return 0;
+    int largo=0,x=0;
+
+    while((strlen(a->contenido[x])>0)&&(x<LARGO_MAX)){
+      largo=largo+strlen(a->contenido[x]);
+      x++;
+                                                     }
+    return largo;
 }
