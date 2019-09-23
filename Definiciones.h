@@ -5,9 +5,11 @@ typedef enum _retorno{
     OK,ERROR,NO_IMPLEMENTADO
                      }TipoRet;
 
+typedef char *Cadena;
+
 typedef struct _archivo{
     string nom;
-    string contenido[LARGO_MAX];
+    Cadena contenido[LARGO_MAX];
     _archivo *ptrsig;
                        }*Archivo;
 
