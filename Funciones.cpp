@@ -1,24 +1,19 @@
 using namespace std;
 
 //tipo1
-TipoRet DIR(Sistema s)
+/*TipoRet DIR(Sistema s)
 {
     if(s==NULL){
       cout<<"Directorio Vacio"<<endl;
                }else{
                   Archivo aux=s->contenido;
                   while(aux!=NULL){
-                    cout<<aux->nom<<"     Archivo     "/*<<resultado de la funcion tamaño*/<<endl;
+                    cout<<aux->nom<<"     Archivo     "<<endl;
                     aux=aux->ptrsig;
                                   }
                     }
     return OK;
-}
-
-TipoRet CREATE()
-{
-    return NO_IMPLEMENTADO;
-}
+}*/
 
 TipoRet IF()
 {
@@ -83,3 +78,41 @@ int tamanio(Archivo a)
 {
     return 0;
 }
+
+TipoRet CREATE(Directorio d){
+    char palabra[19];
+    bool flag = true;
+    cin.getline(palabra,19,'\n');
+    if(strlen(palabra) < 0){
+        for(int i = 19; i > 0; i--){ // Verificar 3 , 2 , 1
+            if(palabra[i] == '.')
+            flag = false;
+        }
+        if(flag == true){
+            return ERROR;
+        }
+        d = CrearArchivo(d,palabra);
+        return OK;
+    }else{
+        return ERROR;
+    }
+
+}
+Directorio CrearArchivo(Directorio d, char nombre[]){
+    Archivo nuevoArchivo = new _archivo;
+    strcpy(nuevoArchivo->nombreArchivo,nombre);
+    nuevoArchivo->contenido[0]='\0';
+    nuevoArchivo->ptrsig = NULL;
+    return d;
+}
+
+
+
+
+
+
+
+
+
+
+
