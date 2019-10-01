@@ -1,23 +1,40 @@
 using namespace std;
 
 //tipo1
-TipoRet DIR(Sistema s)
+/*TipoRet DIR(Sistema s)
 {
     if(s==NULL){
       cout<<"Directorio Vacio"<<endl;
                }else{
                   Archivo aux=s->contenido;
                   while(aux!=NULL){
-                    cout<<aux->nom<<"     Archivo     "/*<<resultado de la funcion tamaño*/<<endl;
+                    cout<<aux->nom<<"     Archivo     "<<endl;
                     aux=aux->ptrsig;
                                   }
                     }
     return OK;
-}
+}*/
 
-TipoRet CREATE()
-{
-    return NO_IMPLEMENTADO;
+
+TipoRet CREATE(Directorio d){
+    char palabra[19];
+    bool flag = true;
+    cin.getline(palabra,19,'\n');
+
+    if(strlen(palabra) < 0){
+        for(int i = 19; i > 0; i--){ // Verificar 3 , 2 , 1
+            if(palabra[i] == '.')
+            flag = false;
+        }
+
+        if(flag == true){
+            return ERROR;
+        }
+        d = CrearArchivo(d,palabra);
+        return OK;
+    }else{
+        return ERROR;
+    }
 }
 
 TipoRet IF()
@@ -32,9 +49,15 @@ TipoRet TYPE()
 
 
 //tipo2
-TipoRet DELETE()
-{
-    return NO_IMPLEMENTADO;
+TipoRet DELETE(Directorio d){
+    char palabra[19];
+    //bool flag = true;
+    cin.getline(palabra,19,'\n');
+    eliminarArchivo(d,palabra);
+    return OK;
+
+    /// HAy que ver como hacemos si el nombre no existe
+    //return ERROR;
 }
 
 TipoRet BF()
@@ -46,7 +69,6 @@ TipoRet CAT()
 {
     return NO_IMPLEMENTADO;
 }
-
 
 //opcionales
 TipoRet IC()
@@ -64,22 +86,65 @@ TipoRet UNDELETE()
     return NO_IMPLEMENTADO;
 }
 
+Directorio eliminarArchivo(Directorio d, char nombre[]){
+    Archivo aux = d->contenido;
+    Archivo ant = NULL;
+    while(!esVacio(aux)){
+        if(aux->nombreArchivo == nombre){
+            if(ant == NULL){
+                d->contenido = aux->ptrsig;
+                delete aux;
+            }else{
+                if(aux->ptrsig == NULL){
+                    ant->ptrsig = aux->ptrsig;
+                    delete aux;
+                }else{
+                    ant->ptrsig = aux->ptrsig;
+                    delete aux;
+                    aux = ant->ptrsig;
+                }
+            }
+        }else{
+            ant = aux;
+            aux = aux->ptrsig;
+        }
+    }
+    return d;
+}
+
+// Esto por ahora no pone el archivo dentro del directorio pasado por parametro
+Directorio CrearArchivo(Directorio d, char nombre[]){
+    Archivo nuevoArchivo = new _archivo;
+    strcpy(nuevoArchivo->nombreArchivo,nombre);
+    nuevoArchivo->contenido[0]='\0';
+    nuevoArchivo->ptrsig = NULL;
+    return d;
+}
 
 //otras
-void MuestroRetorno(TipoRet ret)
-{
-  switch(ret){
-    case OK: cout<<"OK"<<endl;
-             break;
-    case ERROR: cout<<"ERROR"<<endl;
-             break;
-    case NO_IMPLEMENTADO: cout<<"NO IMPLEMENTADO"<<endl;
-                          break;
-             }
+void MuestroRetorno(TipoRet ret){
+    switch(ret){
+    case OK:
+        cout<<"OK"<<endl;
+        break;
+    case ERROR:
+        cout<<"ERROR"<<endl;
+        break;
+    case NO_IMPLEMENTADO:
+        cout<<"NO IMPLEMENTADO"<<endl;
+        break;
+    }
 }
 
-
-int tamanio(Archivo a)
-{
-    return 0;
+bool esVacio(Archivo a){
+    if(a == NULL) return true;
+    else return false;
 }
+/*int tamanio(Archivo a){
+    int largo=0,x=0;
+    while((strlen(a->contenido[x])>0)&&(x<LARGO_MAX)){
+        largo=largo+strlen(a->contenido[x]);
+        x++;
+    }
+    return largo;
+}*/
