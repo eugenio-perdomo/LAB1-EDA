@@ -49,14 +49,14 @@ TipoRet TYPE()
 
 
 //tipo2
-TipoRet DELETE(Directorio d){
+// ya puede venir el nombre por parametro desde main
+TipoRet DELETE(Directorio d){ 
     char palabra[19];
-    //bool flag = true;
     cin.getline(palabra,19,'\n');
     eliminarArchivo(d,palabra);
     return OK;
 
-    /// HAy que ver como hacemos si el nombre no existe
+    /// Hay que ver como hacemos si el nombre no existe
     //return ERROR;
 }
 
