@@ -24,7 +24,7 @@ typedef struct _sistema{
 //tipo1
 TipoRet DIR(Sistema s);
 TipoRet CREATE();
-TipoRet IF();
+TipoRet IF(Directorio d, string nombreArchivo, string texto);
 TipoRet TYPE();
 
 //tipo2
