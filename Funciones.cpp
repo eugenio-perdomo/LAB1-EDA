@@ -46,9 +46,21 @@ TipoRet IF(Directorio d, string nombreArchivo, string texto)
                                }
 }
 
-TipoRet TYPE()
+TipoRet TYPE(Directorio d, string nombreArchivo)
 {
-    return NO_IMPLEMENTADO;
+    while((d->contenido->nom!=nombreArchivo)&&(d->contenido!=NULL)){
+      d->contenido=d->contenido->ptrsig;
+                                                                   }
+    if(d->contenido==NULL){
+      return ERROR;
+                          }else{
+                             int x=0;
+                             while(x<LARGO_MAX){
+                               cout<<d->contenido->contenido[x]<<endl;
+                               x++;
+                                               }
+                             return OK;
+                               }
 }
 
 
