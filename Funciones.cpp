@@ -123,10 +123,11 @@ int tamanio(Archivo a)
     return largo;
 }
 
-bool hayComillas(char str[])
+bool hayComillas(string texto)
 {
-
-
+    char str[largo];
+    texto.copy(str,texto.length(),0);
+    
     if((str[0]=='"')&&(str[strlen(str)-1]=='"')){
        return true;
                                                 }else{
