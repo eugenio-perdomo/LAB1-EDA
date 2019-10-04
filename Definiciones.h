@@ -40,6 +40,7 @@ TipoRet UNDELETE();
 //otras
 void MuestroRetorno(TipoRet ret);
 int tamanio(Archivo a);
+bool hayComillas(char str[]);
 
 
 #endif // DEFINICIONES_H_INCLUDED
