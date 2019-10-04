@@ -122,3 +122,14 @@ int tamanio(Archivo a)
                                                      }
     return largo;
 }
+
+bool hayComillas(char str[])
+{
+
+
+    if((str[0]=='"')&&(str[strlen(str)-1]=='"')){
+       return true;
+                                                }else{
+                                                   return false;
+                                                     }
+}
