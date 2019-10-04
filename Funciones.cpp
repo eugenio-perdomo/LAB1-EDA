@@ -28,7 +28,7 @@ TipoRet IF(Directorio d, string nombreArchivo, string texto)
     if(d->contenido==NULL){
       return ERROR;
                           }else{
-                             if(sizeof(texto)-1>TEXTO_MAX+2/*identificar si empieza y termina con "*/){
+                             if(hayComillas(texto)){
                                return ERROR;
                                                           }else{
                                                              if(sizeof(texto)-1>TEXTO_MAX+2){
