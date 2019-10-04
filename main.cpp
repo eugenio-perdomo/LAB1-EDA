@@ -7,23 +7,33 @@ using namespace std;
 
 int main()
 {
-    bool flag = true;
-    string palabra;
+    /*bool flag = true;
+    char palabra[19];
+    char otra[10];
     while(flag == true){
-        getline(cin,palabra,'\n');
+        cin.getline(palabra,19,'\n');
+        if(strcmp(palabra,"DIR") == 0){}
+        if("FIN") == 0){}
+        otra = getline(palabra,10,' ');
+        if(strcmp(algo(palabra,6),"CREATE ") == 0)
+        if("IF ") == 0)
+        if("TYPE ") == 0)
+        if("DELETE ") == 0)
+        if("BF ") == 0)
+        if("CAT ") == 0)
+        if("IC ") == 0)
+        if("BC ") == 0)
+        if("UNDELETE") == 0)
 
-        if(palabra.compare("DIR") == 0)
-        if(palabra.compare("CREATE") == 0)
-        if(palabra.compare("IF") == 0)
-        if(palabra.compare("TYPE") == 0)
-        if(palabra.compare("DELETE") == 0)
-        if(palabra.compare("BF") == 0)
-        if(palabra.compare("CAT") == 0)
-        if(palabra.compare("IC") == 0)
-        if(palabra.compare("BC") == 0)
-        if(palabra.compare("UNDELETE") == 0)
-        if(palabra.compare("FIN") == 0)
         flag = false;
     }
     return 0;
+}
+
+char algo[](char palabra[], int cosa){
+    char ch[10];
+    for(int i = 0; i < cosa; i++){
+        if(palabra[i] == )
+    }
+    return ch;*/
 }
