@@ -82,9 +82,34 @@ TipoRet CAT()
 
 
 //opcionales
-TipoRet IC()
+TipoRet IC(Directorio d, string nombreArchivo, string texto)
 {
-    return NO_IMPLEMENTADO;
+    while((d->contenido->nom!=nombreArchivo)&&(d->contenido!=NULL)){
+      d->contenido=d->contenido->ptrsig;
+                                                                   }
+    if(d->contenido==NULL){
+      return ERROR;
+                          }else{
+                             if(hayComillas(texto)){
+                               return ERROR;
+                                                          }else{
+                                                             if(sizeof(texto)-1>TEXTO_MAX+2){
+                                                               return ERROR;
+                                                                                            }else{
+                                                                                               int x=0;
+                                                                                               while((x<LARGO_MAX)&&(d->contenido->contenido[x]=='\0')){
+                                                                                                 x++;
+                                                                                                                                                       }
+                                                                                               d->contenido->contenido[x]=new char[TEXTO_MAX];
+                                                                                               while(x>0){
+                                                                                                 strcpy(d->contenido->contenido[x],d->contenido->contenido[x]-1);
+                                                                                                 x++;
+                                                                                                         }
+                                                                                               texto.copy(d->contenido->contenido[0],TEXTO_MAX);
+                                                                                               return OK;
+                                                                                                 }
+                                                               }
+                               }
 }
 
 TipoRet BC()
