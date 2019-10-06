@@ -33,7 +33,7 @@ TipoRet BF();
 TipoRet CAT();
 
 //opcionales
-TipoRet IC();
+TipoRet IC(Directorio d, string nombreArchivo, string texto);
 TipoRet BC();
 TipoRet UNDELETE();
 
