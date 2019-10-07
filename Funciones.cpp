@@ -16,21 +16,18 @@ using namespace std;
 }*/
 
 
-TipoRet CREATE(Directorio d){
-    char palabra[19];
+TipoRet CREATE(Directorio d, char nombre_archivo[]){
     bool flag = true;
-    cin.getline(palabra,19,'\n');
-
-    if(strlen(palabra) < 0){
-        for(int i = 19; i > 0; i--){ // Verificar 3 , 2 , 1
-            if(palabra[i] == '.')
+    if(strlen(nombre_archivo) > 0){
+        for(int i = 19; i > 0; i--){
+            if(nombre_archivo[i] == '.')
             flag = false;
         }
 
         if(flag == true){
             return ERROR;
         }
-        d = CrearArchivo(d,palabra);
+        d = CrearArchivo(d,nombre_archivo);
         return OK;
     }else{
         return ERROR;
@@ -119,9 +116,9 @@ Directorio eliminarArchivo(Directorio d, char nombre[]){
 /// Esto por ahora no pone el archivo dentro del directorio pasado por parametro
 Directorio CrearArchivo(Directorio d, char nombre[]){
     Archivo nuevoArchivo = new _archivo;
-    nuevoArchivo=d->contenido;
+    d->contenido=nuevoArchivo;
     strcpy(nuevoArchivo->nombreArchivo,nombre);
-    nuevoArchivo->contenido[0]='\0';
+    //nuevoArchivo->contenido[0]='\0';
     nuevoArchivo->ptrsig = NULL;
     return d;
 }
