@@ -9,12 +9,12 @@ typedef enum _retorno{
 
 typedef struct _archivo{
     char nombreArchivo[19];
-    char contenido[LARGO_MAX]; //LARGO_MAX
+    //char contenido[LARGO_MAX]; //LARGO_MAX
     _archivo *ptrsig;
                        }*Archivo;
 
 typedef struct _directorio{
-    char nombreDirectorio[10];
+    //std::string nombreDirectorio;
     Archivo contenido;
     //_sistema *subdir;
     _directorio *dirsig;
