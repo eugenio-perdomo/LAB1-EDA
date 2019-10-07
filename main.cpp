@@ -1,39 +1,50 @@
 #include <iostream>
 #include <string.h>
 #include "Definiciones.h"
-#include "Funciones.cpp" //incluir estas 2 aca puede causar problemas con el namespace std
-
+#include "Funciones.cpp"
 using namespace std;
-
+ ///TODO 2 getline dependiendo de nuestra entrada.
 int main()
 {
-    /*bool flag = true;
-    char palabra[19];
-    char otra[10];
-    while(flag == true){
-        cin.getline(palabra,19,'\n');
-        if(strcmp(palabra,"DIR") == 0){}
-        if("FIN") == 0){}
-        otra = getline(palabra,10,' ');
-        if(strcmp(algo(palabra,6),"CREATE ") == 0)
-        if("IF ") == 0)
-        if("TYPE ") == 0)
-        if("DELETE ") == 0)
-        if("BF ") == 0)
-        if("CAT ") == 0)
-        if("IC ") == 0)
-        if("BC ") == 0)
-        if("UNDELETE") == 0)
+    string comando,comnadosinp;
+    Directorio d=NULL;
+    d=new _directorio;
+    //d->nombreDirectorio='/';
+    d->dirsig = NULL;
+    d->contenido = NULL;
+    char nombre_archivo[19];
+    bool flag = true;
+    while(flag == true)
+    {
+        getline(cin,comando,'\n');
+        cin.clear();
+        if(comando.compare("FIN")==0)
+        {
+            cout << "si";
+        }
 
-        flag = false;
+        else
+        {    getline(cin,comando,' ');
+            if(comando.compare("CREATE")==0)
+            {
+                cin.getline(nombre_archivo,19,'\n');
+                MuestroRetorno(CREATE(d,nombre_archivo));
+            }
+
+            /*if("IF ") == 0)
+            if("TYPE ") == 0)
+            if("DELETE ") == 0)
+            if("BF ") == 0)
+            if("CAT ") == 0)
+            if("IC ") == 0)
+            if("BC ") == 0)
+            if("UNDELETE") == 0)*/
+            //getline(cin,comnadosinp,'\n');
+
+        }
+
+
+
     }
     return 0;
-}
-
-char algo[](char palabra[], int cosa){
-    char ch[10];
-    for(int i = 0; i < cosa; i++){
-        if(palabra[i] == )
-    }
-    return ch;*/
 }
