@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdio.h>
+#include <string.h>
 
 
 #define TEXTO_MAX 50
