@@ -1,8 +1,12 @@
 #include <iostream>
-#include "Definiciones.h"
-#include "Funciones.cpp" //incluir estas 2 aca puede causar problemas con el namespace std
+
+
+#define TEXTO_MAX 50
+#define LARGO_MAX 5
 
 using namespace std;
+#include "Definiciones.h"
+#include "Funciones.cpp"
 
 int main()
 {
