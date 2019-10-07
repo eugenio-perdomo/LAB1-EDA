@@ -12,7 +12,7 @@
 using namespace std;
 
 /*
-* TODO 2 getline dependiendo de nuestra entrada;
+* TODO Pasaje de string a char para aquellas funciones a las que se le pasan parametros
 * ver funciones que a cada uno nos funcione diferente/mal;
 * definir todos los tipos de variables y nombres de variables para cada estructura
 */
@@ -24,31 +24,44 @@ int main(){
     //d->nombreDirectorio='/';
     d->dirsig = NULL;
     d->contenido = NULL;
-    char nombre_archivo[LARGONOMBRE];
+    string nombre_archivo;//[LARGONOMBRE];
     bool flag = true;
     while(flag == true){
 
         getline(cin,comando,'\n');
         cin.clear();
 
-        if(comando.compare("FIN") == 0){
-            flag = false;
-        }else{
-            getline(cin,comando,' ');
-            if(comando.compare("CREATE")==0){
-                cin.getline(nombre_archivo,19,'\n');
-                MuestroRetorno(CREATE(d,nombre_archivo));
-            }
+        int pos = comando.find(' ');
+        string tipo = comando.substr(0, pos);
+        cout << "comando: " << tipo << endl;
+        string subComando = comando.substr (pos + 1);
+        cout << "sub: " << subComando << endl;
 
-            if(comando.compare("IF") == 0)
-            if(comando.compare("TYPE") == 0)
-            if(comando.compare("DELETE") == 0)
-            if(comando.compare("BF") == 0)
-            if(comando.compare("CAT") == 0)
-            if(comando.compare("IC") == 0)
-            if(comando.compare("BC") == 0)
-            if(comando.compare("UNDELETE") == 0)
+        if(tipo.compare("CREATE ") == 0){
+            //nombre_archivo = comando.substr(subComando);
+            /*cin.getline(nombre_archivo,19,'\n');
+            MuestroRetorno(CREATE(d,nombre_archivo));*/
         }
+        if(tipo.compare("FIN") == 0)
+            flag = false;
+        if(tipo.compare("UNDELETE") == 0)
+            cout << "IF";
+        if(tipo.compare("DIR") == 0)
+            cout << "DIR";
+        if(tipo.compare("IF") == 0)
+            cout << "IF";
+        if(tipo.compare("TYPE") == 0)
+            cout << "IF";
+        if(tipo.compare("DELETE") == 0)
+            cout << "IF";
+        if(tipo.compare("BF") == 0)
+            cout << "IF";
+        if(tipo.compare("CAT") == 0)
+            cout << "IF";
+        if(tipo.compare("IC") == 0)
+            cout << "IF";
+        if(tipo.compare("BC") == 0)
+            cout << "IF";
     }
     return 0;
 }
