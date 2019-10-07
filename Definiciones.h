@@ -14,7 +14,7 @@ typedef struct _archivo{
                        }*Archivo;
 
 typedef struct _sistema{
-    string nom;
+    char nom[];
     Archivo contenido;
     //_sistema *subdir;
     _sistema *dirsig;
