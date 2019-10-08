@@ -1,50 +1,70 @@
 #include <iostream>
+#include <stdio.h>
 #include <string.h>
+
+#define TEXTO_MAX 50
+#define LARGO_MAX 5
+#define LARGONOMBRE 19
+
+using namespace std;
+
 #include "Definiciones.h"
 #include "Funciones.cpp"
-using namespace std;
- ///TODO 2 getline dependiendo de nuestra entrada.
-int main()
-{
-    string comando,comnadosinp;
+
+
+
+/**
+* TODO
+* ver funciones que a cada uno nos funcione diferente/mal;
+* definir todos los tipos de variables y nombres de variables para cada estructura
+*/
+int main(){
+
+    string comando,texto;
     Directorio d=NULL;
-    d=new _directorio;
+    d = new _directorio;
     //d->nombreDirectorio='/';
     d->dirsig = NULL;
     d->contenido = NULL;
-    char nombre_archivo[19];
+    char nombre_archivo[LARGONOMBRE];//[LARGONOMBRE];
     bool flag = true;
-    while(flag == true)
-    {
+    while(flag == true){
+
         getline(cin,comando,'\n');
         cin.clear();
-        if(comando.compare("FIN")==0)
-        {
-            cout << "si";
+
+        int pos = comando.find(' ');
+        string tipo = comando.substr(0, pos);
+        string subComando = comando.substr (pos + 1);
+
+        if(tipo.compare("CREATE") == 0){
+            subComando.copy(nombre_archivo,subComando.length(),0);
+            MuestroRetorno(CREATE(d,nombre_archivo));
         }
-
-        else
-        {    getline(cin,comando,' ');
-            if(comando.compare("CREATE")==0)
-            {
-                cin.getline(nombre_archivo,19,'\n');
-                MuestroRetorno(CREATE(d,nombre_archivo));
-            }
-
-            /*if("IF ") == 0)
-            if("TYPE ") == 0)
-            if("DELETE ") == 0)
-            if("BF ") == 0)
-            if("CAT ") == 0)
-            if("IC ") == 0)
-            if("BC ") == 0)
-            if("UNDELETE") == 0)*/
-            //getline(cin,comnadosinp,'\n');
-
+        if(tipo.compare("FIN") == 0)
+            flag = false;
+        if(tipo.compare("UNDELETE") == 0)
+            cout << "IF";
+        if(tipo.compare("DIR") == 0)
+            MuestroRetorno(DIR(d));
+        if(tipo.compare("IF") == 0){
+            subComando.copy(nombre_archivo,subComando.length(),0);
+            getline(cin,texto)
+            MuestroRetorno(IF(d,nombre_archivo))
+        if(tipo.compare("TYPE") == 0){
+            subComando.copy(nombre_archivo,subComando.length(),0);
+            MuestroRetorno(TYPE(d,nombre_archivo));
         }
-
-
-
+        if(tipo.compare("DELETE") == 0)
+            cout << "IF";
+        if(tipo.compare("BF") == 0)
+            cout << "IF";
+        if(tipo.compare("CAT") == 0)
+            cout << "IF";
+        if(tipo.compare("IC") == 0)
+            cout << "IF";
+        if(tipo.compare("BC") == 0)
+            cout << "IF";
     }
     return 0;
 }
