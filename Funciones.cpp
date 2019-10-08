@@ -1,5 +1,3 @@
-using namespace std;
-
 //tipo1
 TipoRet DIR(Directorio d)
 {
@@ -7,10 +5,15 @@ TipoRet DIR(Directorio d)
       cout<<"Directorio Vacio"<<endl;
                }else{
                   Archivo aux=d->contenido;
-                  while(aux!=NULL){
-                    cout<<aux->nombre_archivo<<"     Archivo     "<<tamanio(aux)<<endl;
-                    aux=aux->ptrsig;
-                                  }
+                  if(aux!=NULL){
+                    while(aux!=NULL){
+                      cout<<aux->nombreArchivo<<"     Archivo     "<<tamanio(aux)<<endl;
+                      aux=aux->ptrsig;
+                                    }
+                               }else{
+                                  cout<<"Directorio Vacio"<<endl;
+                                    }
+
                     }
     return OK;
 }
@@ -37,16 +40,21 @@ TipoRet CREATE(Directorio d, char nombre_archivo[])
 
 TipoRet IF(Directorio d, char nombreArchivo[], string texto)
 {
-    while((d->contenido->nombre_archivo!=nombreArchivo)&&(d->contenido!=NULL)){
+    cout<<"Entramos";
+    while((d->contenido->nombreArchivo!=nombreArchivo)&&(d->contenido!=NULL)){
       d->contenido=d->contenido->ptrsig;
-                                                                   }
+                                                                             }
+    cout<<d->contenido->nombreArchivo;
     if(d->contenido==NULL){
+      cout<<"vacio";
       return ERROR;
                           }else{
                              if(hayComillas(texto)){
+                               cout<<"comillas";
                                return ERROR;
                                                           }else{
                                                              if(sizeof(texto)-1>TEXTO_MAX+2){
+                                                               cout<<"largo";
                                                                return ERROR;
                                                                                             }else{
                                                                                                int x=0;
@@ -63,9 +71,9 @@ TipoRet IF(Directorio d, char nombreArchivo[], string texto)
 
 TipoRet TYPE(Directorio d, char nombreArchivo[])
 {
-    while((d->contenido->nombre_archivo!=nombreArchivo)&&(d->contenido!=NULL)){
+    while((d->contenido->nombreArchivo!=nombreArchivo)&&(d->contenido!=NULL)){
       d->contenido=d->contenido->ptrsig;
-                                                                   }
+                                                                             }
     if(d->contenido==NULL){
       return ERROR;
                           }else{
@@ -80,9 +88,18 @@ TipoRet TYPE(Directorio d, char nombreArchivo[])
 
 
 //tipo2
-TipoRet DELETE()
-{
-    return NO_IMPLEMENTADO;
+TipoRet DELETE(Directorio d, char palabra[]){
+
+    while(!esVacio(d->contenido))
+    {
+        if(strcmp(d->contenido->nombreArchivo,palabra)==0)
+        {
+            d=eliminarArchivo(d,palabra);
+            return OK;
+        }
+        d->contenido=d->contenido->ptrsig;
+    }
+    return ERROR;
 }
 
 TipoRet BF()
@@ -99,16 +116,19 @@ TipoRet CAT()
 //opcionales
 TipoRet IC(Directorio d, char nombreArchivo[], string texto)
 {
-    while((d->contenido->nombre_archivo!=nombreArchivo)&&(d->contenido!=NULL)){
+    while((d->contenido->nombreArchivo!=nombreArchivo)&&(d->contenido!=NULL)){
       d->contenido=d->contenido->ptrsig;
                                                                    }
     if(d->contenido==NULL){
+      cout<<"es null";
       return ERROR;
                           }else{
                              if(hayComillas(texto)){
+                               cout<<"no tiene comillas";
                                return ERROR;
                                                           }else{
                                                              if(sizeof(texto)-1>TEXTO_MAX+2){
+                                                               cout<<"muylargo";
                                                                return ERROR;
                                                                                             }else{
                                                                                                int x=0;
@@ -179,12 +199,53 @@ Directorio CrearArchivo(Directorio d, char nombre[])
 {
 
     Archivo nuevoArchivo = new _archivo;
+    nuevoArchivo->ptrsig=d->contenido;
     d->contenido=nuevoArchivo;
-    strcpy(nuevoArchivo->nombre_archivo,nombre);
+    strcpy(nuevoArchivo->nombreArchivo,nombre);
     int x;
     for(x=0;x<LARGO_MAX;x++){
       d->contenido->contenido[x]=NULL;
                             }
-    nuevoArchivo->ptrsig = NULL;
     return d;
 }
+
+Directorio eliminarArchivo(Directorio d, char nombre[]){
+
+    Archivo aux = d->contenido;
+    Archivo ant = NULL;
+    while(!esVacio(aux)){
+        if(strcmp(aux->nombreArchivo,nombre)==0){
+            if(ant == NULL){
+                d->contenido = d->contenido->ptrsig;
+                delete aux;
+                cout<<"borrado1";
+                break;
+            }else{
+                if(aux->ptrsig == NULL){
+                    ant->ptrsig = aux->ptrsig;
+                    delete aux;
+                    cout<<"borrado2"<<endl;
+                    break;
+                }else{
+                    ant->ptrsig = aux->ptrsig;
+                    delete aux;
+                    //aux = ant->ptrsig;
+                    cout<<"borrado3"<<endl;
+                    break;
+                }
+            }
+        }else{
+            ant = aux;
+            aux = aux->ptrsig;
+        }
+    }
+    return d;
+}
+
+bool esVacio(Archivo a){
+
+    if(a == NULL) return true;
+    else return false;
+}
+
+
