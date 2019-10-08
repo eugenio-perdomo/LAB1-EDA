@@ -1,31 +1,30 @@
 #ifndef DEFINICIONES_H_INCLUDED
 #define DEFINICIONES_H_INCLUDED
-#define LARGO_MAX 10
+
 typedef enum _retorno{
     OK,ERROR,NO_IMPLEMENTADO
-                     }TipoRet;
+}TipoRet;
 
-//typedef struct *Cabezera;
+typedef char *Cadena;
 
 typedef struct _archivo{
-    char nombreArchivo[19];
-    //char contenido[LARGO_MAX]; //LARGO_MAX
+    char nombreArchivo[LARGONOMBRE];
+    Cadena contenido[LARGO_MAX];
     _archivo *ptrsig;
-                       }*Archivo;
+}*Archivo;
 
 typedef struct _directorio{
     //std::string nombreDirectorio;
     Archivo contenido;
-    //_sistema *subdir;
     _directorio *dirsig;
-                       }*Directorio;
+}*Directorio;
 
 
 //tipo1
 TipoRet DIR(Directorio d);
-TipoRet CREATE(Directorio d);
-TipoRet IF();
-TipoRet TYPE();
+TipoRet CREATE(Directorio d,char nombre_archivo[]);
+TipoRet IF(Directorio d, char nombreArchivo[], std::string texto);
+TipoRet TYPE(Directorio d, char nombreArchivo[]);
 
 //tipo2
 TipoRet DELETE(Directorio d, char palabra[]);
@@ -33,7 +32,7 @@ TipoRet BF();
 TipoRet CAT();
 
 //opcionales
-TipoRet IC();
+TipoRet IC(Directorio d, std::string nombreArchivo, std::string texto);
 TipoRet BC();
 TipoRet UNDELETE();
 
@@ -43,5 +42,6 @@ int tamanio(Archivo a);
 Directorio CrearArchivo(Directorio d, char nombre[]);
 Directorio eliminarArchivo(Directorio d, char nombre[]);
 bool esVacio(Archivo a);
+bool hayComillas(std::string texto);
 
 #endif // DEFINICIONES_H_INCLUDED
