@@ -4,36 +4,36 @@
 typedef enum _retorno{
     OK,ERROR,NO_IMPLEMENTADO
                      }TipoRet;
-
 typedef char *Cadena;
 
 typedef struct _archivo{
-    string nom;
+    char nombreArchivo[LARGONOMBRE];
     Cadena contenido[LARGO_MAX];
     _archivo *ptrsig;
+    int lineas;
                        }*Archivo;
 
-typedef struct _sistema{
+typedef struct _directorio{
     string nom;
     Archivo contenido;
-    //_sistema *subdir;
-    _sistema *dirsig;
-                       }*Sistema;
+    //_directorio *subdir;
+    _directorio *dirsig;
+                       }*Directorio;
 
 
 //tipo1
-TipoRet DIR(Sistema s);
-TipoRet CREATE();
-TipoRet IF(Directorio d, string nombreArchivo, string texto);
-TipoRet TYPE(Directorio d, string nombreArchivo);
+TipoRet DIR(Directorio d);
+TipoRet CREATE(Directorio d,  char nombre_archivo[]);
+TipoRet IF(Directorio d,  std::string nombreArchivo[],  std::string texto);
+TipoRet TYPE(Directorio d,  std::string nombreArchivo);
 
 //tipo2
-TipoRet DELETE();
+TipoRet DELETE(Directorio d, char palabra[]);
 TipoRet BF();
 TipoRet CAT();
 
 //opcionales
-TipoRet IC(Directorio d, string nombreArchivo, string texto);
+TipoRet IC(Directorio d,  std::string nombreArchivo, string texto);
 TipoRet BC();
 TipoRet UNDELETE();
 
@@ -41,6 +41,9 @@ TipoRet UNDELETE();
 void MuestroRetorno(TipoRet ret);
 int tamanio(Archivo a);
 bool hayComillas(string texto);
+Directorio CrearArchivo(Directorio d, char nombre_archivo[]);
+Directorio eliminarArchivo(Directorio d, char nombre[]);
+bool esVacio(Archivo a);
 
 
 #endif // DEFINICIONES_H_INCLUDED
