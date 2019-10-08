@@ -6,10 +6,10 @@
 #define LARGO_MAX 5
 #define LARGONOMBRE 19
 
+using namespace std;
+
 #include "Definiciones.h"
 #include "Funciones.cpp"
-
-using namespace std;
 
 /*
 * TODO 2 getline dependiendo de nuestra entrada;
