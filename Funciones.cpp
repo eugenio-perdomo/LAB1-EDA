@@ -8,7 +8,7 @@ TipoRet DIR(Directorio d)
                }else{
                   Archivo aux=d->contenido;
                   while(aux!=NULL){
-                    cout<<aux->nom<<"     Archivo     "<<tamanio(aux)<<endl;
+                    cout<<aux->nombre_archivo<<"     Archivo     "<<tamanio(aux)<<endl;
                     aux=aux->ptrsig;
                                   }
                     }
@@ -37,7 +37,7 @@ TipoRet CREATE(Directorio d, char nombre_archivo[])
 
 TipoRet IF(Directorio d, char nombreArchivo[], string texto)
 {
-    while((d->contenido->nom!=nombreArchivo)&&(d->contenido!=NULL)){
+    while((d->contenido->nombre_archivo!=nombreArchivo)&&(d->contenido!=NULL)){
       d->contenido=d->contenido->ptrsig;
                                                                    }
     if(d->contenido==NULL){
@@ -63,7 +63,7 @@ TipoRet IF(Directorio d, char nombreArchivo[], string texto)
 
 TipoRet TYPE(Directorio d, char nombreArchivo[])
 {
-    while((d->contenido->nom!=nombreArchivo)&&(d->contenido!=NULL)){
+    while((d->contenido->nombre_archivo!=nombreArchivo)&&(d->contenido!=NULL)){
       d->contenido=d->contenido->ptrsig;
                                                                    }
     if(d->contenido==NULL){
@@ -99,7 +99,7 @@ TipoRet CAT()
 //opcionales
 TipoRet IC(Directorio d, char nombreArchivo[], string texto)
 {
-    while((d->contenido->nom!=nombreArchivo)&&(d->contenido!=NULL)){
+    while((d->contenido->nombre_archivo!=nombreArchivo)&&(d->contenido!=NULL)){
       d->contenido=d->contenido->ptrsig;
                                                                    }
     if(d->contenido==NULL){
@@ -180,7 +180,7 @@ Directorio CrearArchivo(Directorio d, char nombre[])
 
     Archivo nuevoArchivo = new _archivo;
     d->contenido=nuevoArchivo;
-    strcpy(nuevoArchivo->nom,nombre);
+    strcpy(nuevoArchivo->nombre_archivo,nombre);
     int x;
     for(x=0;x<LARGO_MAX;x++){
       d->contenido->contenido[x]=NULL;
@@ -188,4 +188,3 @@ Directorio CrearArchivo(Directorio d, char nombre[])
     nuevoArchivo->ptrsig = NULL;
     return d;
 }
-
