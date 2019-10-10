@@ -6,53 +6,54 @@
 #define LARGO_MAX 5
 #define LARGONOMBRE 19
 
+using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
-using namespace std;
-
-/*
-* TODO Pasaje de string a char para aquellas funciones a las que se le pasan parametros
-* ver funciones que a cada uno nos funcione diferente/mal;
-* definir todos los tipos de variables y nombres de variables para cada estructura
+/** TODO Otras funciones
 */
-int main(){
-
-    string comando;
-    Directorio d=NULL;
+int main()
+{
+    string comando,tipo,texto,subComando,nombre_archivo;
+    int espacio = 0,pos = 0;
+    Directorio d = NULL;
     d = new _directorio;
-    //d->nombreDirectorio='/';
     d->dirsig = NULL;
     d->contenido = NULL;
-    string nombre_archivo;//[LARGONOMBRE];
     bool flag = true;
-    while(flag == true){
-
+    while(flag == true)
+    {
         getline(cin,comando,'\n');
         cin.clear();
 
-        int pos = comando.find(' ');
-        string tipo = comando.substr(0, pos);
-        cout << "comando: " << tipo << endl;
-        string subComando = comando.substr (pos + 1);
-        cout << "sub: " << subComando << endl;
+        pos = comando.find(' ');
+        tipo = comando.substr(0, pos);
+        subComando = comando.substr(pos + 1);
 
-        if(tipo.compare("CREATE ") == 0){
-            //nombre_archivo = comando.substr(subComando);
-            /*cin.getline(nombre_archivo,19,'\n');
-            MuestroRetorno(CREATE(d,nombre_archivo));*/
+        if(tipo.compare("CREATE") == 0)
+        {
+            MuestroRetorno(CREATE(d,subComando));
         }
-        if(tipo.compare("FIN") == 0)
-            flag = false;
-        if(tipo.compare("UNDELETE") == 0)
-            cout << "IF";
         if(tipo.compare("DIR") == 0)
-            cout << "DIR";
+            MuestroRetorno(DIR(d));
         if(tipo.compare("IF") == 0)
-            cout << "IF";
+        {
+            espacio = subComando.find(' ');
+            texto = subComando.substr(espacio + 1);
+            subComando = subComando.substr(0,espacio);
+            MuestroRetorno(IF(d,subComando,texto));
+        }
         if(tipo.compare("TYPE") == 0)
-            cout << "IF";
+        {
+            //subComando.copy(nombre_archivo,subComando.length(),0);
+            //MuestroRetorno(TYPE(d,nombre_archivo));
+        }
         if(tipo.compare("DELETE") == 0)
+        {
+            MuestroRetorno(DELETE(d,subComando));
+        }
+
+        if(tipo.compare("UNDELETE") == 0)
             cout << "IF";
         if(tipo.compare("BF") == 0)
             cout << "IF";
@@ -62,6 +63,8 @@ int main(){
             cout << "IF";
         if(tipo.compare("BC") == 0)
             cout << "IF";
+        if(tipo.compare("FIN") == 0)
+            flag = false;
     }
     return 0;
 }
