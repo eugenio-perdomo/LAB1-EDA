@@ -10,7 +10,7 @@ using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
-/** TODO Otras funciones
+/** TODO IC aun no funciona
 */
 int main()
 {
@@ -45,8 +45,7 @@ int main()
         }
         if(tipo.compare("TYPE") == 0)
         {
-            //subComando.copy(nombre_archivo,subComando.length(),0);
-            //MuestroRetorno(TYPE(d,nombre_archivo));
+            MuestroRetorno(TYPE(d,subComando));
         }
         if(tipo.compare("DELETE") == 0)
         {
@@ -56,11 +55,20 @@ int main()
         if(tipo.compare("UNDELETE") == 0)
             cout << "IF";
         if(tipo.compare("BF") == 0)
-            cout << "IF";
+        {
+            espacio = subComando.find(' ');
+            subComando = subComando.substr(0,espacio);
+            MuestroRetorno(BF(d,subComando,0));
+        }
         if(tipo.compare("CAT") == 0)
             cout << "IF";
         if(tipo.compare("IC") == 0)
-            cout << "IF";
+        {
+            espacio = subComando.find(' ');
+            texto = subComando.substr(espacio + 1);
+            subComando = subComando.substr(0,espacio);
+            MuestroRetorno(IC(d,subComando,texto));
+        }
         if(tipo.compare("BC") == 0)
             cout << "IF";
         if(tipo.compare("FIN") == 0)
