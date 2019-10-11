@@ -1,24 +1,18 @@
 //tipo1
 TipoRet DIR(Directorio d)
 {
-    if(d==NULL)
+    if(d->contenido == NULL)
     {
         cout<<"Directorio Vacio"<<endl;
+        return ERROR;
     }
     else
     {
-        Archivo aux=d->contenido;
-        if(aux!=NULL)
+        Archivo aux = d->contenido;
+        while(aux != NULL)
         {
-            while(aux!=NULL)
-            {
-                cout<<aux->nombreArchivo<<"     Archivo     "<<tamanio(aux)<<endl;
-                aux=aux->ptrsig;
-            }
-        }
-        else
-        {
-            cout<<"Directorio Vacio"<<endl;
+            cout << aux->nombreArchivo << "     Archivo     " << tamanio(aux) << endl;
+            aux = aux->ptrsig;
         }
         delete aux;
     }
@@ -43,64 +37,69 @@ TipoRet CREATE(Directorio d, string nombre_archivo)
 
 TipoRet IF(Directorio d, string nombreArchivo, string texto)
 {
-    cout<<"Entramos";
-    while((d->contenido->nombreArchivo!=nombreArchivo)&&(d->contenido!=NULL))
+    if(esVacio(d->contenido))
     {
-        d->contenido=d->contenido->ptrsig;
-    }
-    cout<<d->contenido->nombreArchivo;
-    if(d->contenido==NULL)
-    {
-        cout<<"vacio";
         return ERROR;
     }
     else
     {
-        if(hayComillas(texto))
+        Archivo aux = d->contenido;
+        while(aux->nombreArchivo != nombreArchivo && aux != NULL)
         {
-            cout<<"comillas";
+            aux = aux->ptrsig;
+        }
+        if(!hayComillas(texto))
+        {
+            cout<<"No tiene comillas\n";
             return ERROR;
         }
         else
         {
             if(sizeof(texto)-1>TEXTO_MAX+2)
             {
-                cout<<"largo";
+                cout<<"Muy largo\n";
                 return ERROR;
             }
             else
             {
                 int x=0;
-                while((x<LARGO_MAX)&&(d->contenido->contenido[x]!=NULL))
+                while(x < LARGO_MAX && aux->contenido[x] != NULL)
                 {
                     x++;
                 }
-                d->contenido->contenido[x]=new char[TEXTO_MAX];
-                texto.copy(d->contenido->contenido[x],TEXTO_MAX);
+                d->contenido->contenido[x] = new char[TEXTO_MAX];
+                texto.copy(aux->contenido[x],TEXTO_MAX);
                 return OK;
             }
         }
     }
 }
 
-TipoRet TYPE(Directorio d, string nombreArchivo)
+TipoRet TYPE(Directorio d, string nombre_Archivo)
 {
-    while((d->contenido->nombreArchivo!=nombreArchivo)&&(d->contenido!=NULL))
-    {
-        d->contenido=d->contenido->ptrsig;
-    }
-    if(d->contenido==NULL)
+    if(esVacio(d->contenido))
     {
         return ERROR;
     }
     else
     {
-        int x=0;
-        while(x<LARGO_MAX)
+        Archivo aux = d->contenido;
+        while(aux != NULL)
         {
-            cout<<d->contenido->contenido[x]<<endl;
-            x++;
+            if(aux->nombreArchivo == nombre_Archivo)
+            {
+                int x=0;
+                while(x < LARGO_MAX)
+                {
+                    if(aux->contenido[x] != NULL){
+                        cout << aux->contenido[x] << endl;
+                    }
+                    x++;
+                }
+            }
+            aux = aux->ptrsig;
         }
+        delete aux;
         return OK;
     }
 }
@@ -122,9 +121,42 @@ TipoRet DELETE(Directorio d, string palabra)
     return ERROR;
 }
 
-TipoRet BF()
+TipoRet BF(Directorio d,string nombreArchivo, int linea)
 {
-    return NO_IMPLEMENTADO;
+    if(esVacio(d->contenido))
+    {
+        return ERROR;
+    }
+    else
+    {
+        Archivo auxArchivo = d->contenido;
+        while(auxArchivo->nombreArchivo != nombreArchivo && auxArchivo != NULL)
+        {
+            auxArchivo = auxArchivo->ptrsig;
+        }
+
+        int x=0;
+        Cadena aux;
+        while(x<LARGO_MAX)
+        {
+            if(auxArchivo->contenido[x]==NULL)
+                x++;
+            else
+            {
+                if(x == linea)
+                {
+                    aux = auxArchivo->contenido[x];
+                    auxArchivo->contenido[x] = NULL;
+                    x = LARGO_MAX;
+                    delete aux;
+                }
+                else
+                    x++;
+            }
+        }
+        delete auxArchivo;
+        return OK;
+    }
 }
 
 TipoRet CAT()
@@ -135,47 +167,43 @@ TipoRet CAT()
 //opcionales
 TipoRet IC(Directorio d, string nombreArchivo, string texto)
 {
-    while((d->contenido->nombreArchivo!=nombreArchivo)&&(d->contenido!=NULL))
+    if(esVacio(d->contenido))
     {
-        d->contenido=d->contenido->ptrsig;
-    }
-    if(d->contenido==NULL)
-    {
-        cout<<"es null";
         return ERROR;
     }
     else
     {
-        if(hayComillas(texto))
+        Archivo aux = d->contenido;
+        while(aux != NULL)
         {
-            cout<<"no tiene comillas";
-            return ERROR;
-        }
-        else
-        {
-            if(sizeof(texto)-1>TEXTO_MAX+2)
+            if(aux->nombreArchivo != nombreArchivo)
             {
-                cout<<"muylargo";
-                return ERROR;
-            }
-            else
-            {
-                int x=0;
-                while((x<LARGO_MAX)&&(d->contenido->contenido[x]!=NULL))
+                if(!hayComillas(texto) || sizeof(texto)-1>TEXTO_MAX+2)
                 {
-                    x++;
+                    cout << "aca\n";
+                    return ERROR;
                 }
-                d->contenido->contenido[x]=new char[TEXTO_MAX];
-                while(x>0)
+                else
                 {
-                    strcpy(d->contenido->contenido[x],d->contenido->contenido[x]-1);
-                    x++;
+                    int x = 0;
+                    while(x<LARGO_MAX && aux->contenido[x] != NULL)
+                    {
+                        x++;
+                    }
+                    aux->contenido[x] = new char[TEXTO_MAX];
+                    while(x>0)
+                    {
+                        strcpy(aux->contenido[x],aux->contenido[x]-1);
+                        x++;
+                    }
+                    texto.copy(aux->contenido[0],TEXTO_MAX);
+                    return OK;
                 }
-                texto.copy(d->contenido->contenido[0],TEXTO_MAX);
-                return OK;
             }
+            aux = aux->ptrsig;
         }
     }
+    return ERROR;
 }
 
 TipoRet BC()
@@ -259,7 +287,6 @@ Directorio eliminarArchivo(Directorio d, string nombre)
             {
                 d->contenido = d->contenido->ptrsig;
                 delete aux;
-                cout<<"borrado1\n";
                 break;
             }
             else
@@ -268,15 +295,12 @@ Directorio eliminarArchivo(Directorio d, string nombre)
                 {
                     ant->ptrsig = aux->ptrsig;
                     delete aux;
-                    cout<<"borrado2\n";
                     break;
                 }
                 else
                 {
                     ant->ptrsig = aux->ptrsig;
                     delete aux;
-                    //aux = ant->ptrsig;
-                    cout<<"borrado3\n";
                     break;
                 }
             }
