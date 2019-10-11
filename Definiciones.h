@@ -31,7 +31,7 @@ TipoRet TYPE(Directorio d, std::string nombreArchivo);
 
 //tipo2
 TipoRet DELETE(Directorio d, std::string palabra);
-TipoRet BF();
+TipoRet BF(Directorio d,string nombreArchivo, int linea);
 TipoRet CAT();
 
 //opcionales
