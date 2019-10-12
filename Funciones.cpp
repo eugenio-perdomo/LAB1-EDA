@@ -121,42 +121,44 @@ TipoRet DELETE(Directorio d, string palabra)
     return ERROR;
 }
 
-TipoRet BF(Directorio d,string nombreArchivo, int linea)
+TipoRet BF(Directorio d, string nombreArchivo, int linea)
 {
-    if(esVacio(d->contenido))
-    {
+    if(esVacio(d->contenido)){
         return ERROR;
-    }
-    else
-    {
-        Archivo auxArchivo = d->contenido;
-        while(auxArchivo->nombreArchivo != nombreArchivo && auxArchivo != NULL)
-        {
-            auxArchivo = auxArchivo->ptrsig;
-        }
+                             }else{
+                                Archivo aux=d->contenido;
+                                while((aux->nombreArchivo!=nombreArchivo)&&(aux!=NULL)){
+                                  aux=aux->ptrsig;
+                                                                                       }
+                                if(aux==NULL){
+                                  return ERROR;
+                                             }else{
+                                                int x=0;
+                                                while(x<LARGO_MAX){
+                                                  if(aux->contenido[x]!=NULL){
+                                                    x++;
+                                                                             }
+                                                                  }
+                                                if(x>0){
+                                                  int y;
+                                                  if(linea>x){
+                                                    for(y=x-1;y>0;y++){
+                                                      delete aux->contenido[x-1];
+                                                      x--;
+                                                                      }
+                                                             }else{
+                                                                for(y=linea;y>0;y--){
+                                                                  delete aux->contenido[x-1];
+                                                                  x--;
+                                                                                    }
+                                                                  }
+                                                       }else{
+                                                          cout<<"Archivo vacio"<<endl;
+                                                            }
+                                                return OK;
+                                                  }
+                                  }
 
-        int x=0;
-        Cadena aux;
-        while(x<LARGO_MAX)
-        {
-            if(auxArchivo->contenido[x]==NULL)
-                x++;
-            else
-            {
-                if(x == linea)
-                {
-                    aux = auxArchivo->contenido[x];
-                    auxArchivo->contenido[x] = NULL;
-                    x = LARGO_MAX;
-                    delete aux;
-                }
-                else
-                    x++;
-            }
-        }
-        delete auxArchivo;
-        return OK;
-    }
 }
 
 TipoRet CAT()
