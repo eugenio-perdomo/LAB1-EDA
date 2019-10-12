@@ -11,7 +11,7 @@ TipoRet DIR(Directorio d)
         Archivo aux = d->contenido;
         while(aux != NULL)
         {
-            cout << aux->nombreArchivo << "     Archivo     " << tamanio(aux) << endl;
+            cout << aux->nombreArchivo << "\tArchivo \t" << tamanio(aux) << "\t" << aux->lineas << endl;
             aux = aux->ptrsig;
         }
         delete aux;
@@ -43,6 +43,7 @@ TipoRet IF(Directorio d, string nombreArchivo, string texto)
     }
     else
     {
+
         Archivo aux = d->contenido;
         while(aux->nombreArchivo != nombreArchivo && aux != NULL)
         {
@@ -55,7 +56,7 @@ TipoRet IF(Directorio d, string nombreArchivo, string texto)
         }
         else
         {
-            if(sizeof(texto)-1>TEXTO_MAX+2)
+            if(texto.length() > TEXTO_MAX)
             {
                 cout<<"Muy largo\n";
                 return ERROR;
@@ -67,8 +68,9 @@ TipoRet IF(Directorio d, string nombreArchivo, string texto)
                 {
                     x++;
                 }
-                d->contenido->contenido[x] = new char[TEXTO_MAX];
+                aux->contenido[x] = new char[TEXTO_MAX];
                 texto.copy(aux->contenido[x],TEXTO_MAX);
+                aux->lineas++;
                 return OK;
             }
         }
@@ -91,7 +93,8 @@ TipoRet TYPE(Directorio d, string nombre_Archivo)
                 int x=0;
                 while(x < LARGO_MAX)
                 {
-                    if(aux->contenido[x] != NULL){
+                    if(aux->contenido[x] != NULL)
+                    {
                         cout << aux->contenido[x] << endl;
                     }
                     x++;
@@ -121,7 +124,7 @@ TipoRet DELETE(Directorio d, string palabra)
     return ERROR;
 }
 
-TipoRet BF(Directorio d,string nombreArchivo, int linea)
+TipoRet BF(Directorio d, string nombreArchivo, int linea)
 {
     if(esVacio(d->contenido))
     {
@@ -159,8 +162,22 @@ TipoRet BF(Directorio d,string nombreArchivo, int linea)
     }
 }
 
-TipoRet CAT()
+TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
 {
+    /*if(nombreArchivo1 == nombreArchivo2) return ERROR;
+    bool flag1 = false, flag2 = false; ///Ver la cantidad de lineas y que no se pasen entre los archivos
+    Archivo aux = d->contenido;
+    while(!esVacio(aux)){
+        if(aux->nombreArchivo == nombreArchivo1)
+            flag1 = true;
+        if(aux->nombreArchivo == nombreArchivo2)
+            flag2 = true;
+        aux = aux->ptrsig;
+    }
+    if(flag1 && flag2){
+        Concatenacion();
+        return OK;
+    }*/
     return NO_IMPLEMENTADO;
 }
 
@@ -174,36 +191,44 @@ TipoRet IC(Directorio d, string nombreArchivo, string texto)
     else
     {
         Archivo aux = d->contenido;
-        while(aux != NULL)
+        while(aux->nombreArchivo != nombreArchivo && aux != NULL)
         {
-            if(aux->nombreArchivo != nombreArchivo)
-            {
-                if(!hayComillas(texto) || sizeof(texto)-1>TEXTO_MAX+2)
-                {
-                    cout << "aca\n";
-                    return ERROR;
-                }
-                else
-                {
-                    int x = 0;
-                    while(x<LARGO_MAX && aux->contenido[x] != NULL)
-                    {
-                        x++;
-                    }
-                    aux->contenido[x] = new char[TEXTO_MAX];
-                    while(x>0)
-                    {
-                        strcpy(aux->contenido[x],aux->contenido[x]-1);
-                        x++;
-                    }
-                    texto.copy(aux->contenido[0],TEXTO_MAX);
-                    return OK;
-                }
-            }
             aux = aux->ptrsig;
         }
+        if(!hayComillas(texto))
+        {
+            cout<<"No tiene comillas\n";
+            return ERROR;
+        }
+        else
+        {
+            if(texto.length() > TEXTO_MAX)
+            {
+                cout<<"Muy largo\n";
+                return ERROR;
+            }
+            else
+            {
+                int x=0;
+                while(x < LARGO_MAX && aux->contenido[x] != NULL)
+                {
+                    x++;
+                }
+                aux->contenido[x] = new char[TEXTO_MAX];
+                if(x>0)
+                {
+                    int y;
+                    for(y=x; y>0; y--)
+                    {
+                        strcpy(aux->contenido[y],aux->contenido[y-1]);
+                    }
+                }
+                texto.copy(aux->contenido[0],TEXTO_MAX);
+                aux->lineas++;
+                return OK;
+            }
+        }
     }
-    return ERROR;
 }
 
 TipoRet BC()
@@ -236,11 +261,13 @@ void MuestroRetorno(TipoRet ret)
 
 int tamanio(Archivo a)
 {
-    int largo=0,x=0;
-
-    while((sizeof(a->contenido[x])-1>0)&&(x<LARGO_MAX))
+    int largo = 0, x = 0;
+    while(x < LARGO_MAX)
     {
-        largo=largo+sizeof(a->contenido[x])-1;
+        if(a->contenido[x] != NULL)
+        {
+            largo = largo + sizeof(a->contenido[x]) - 1;
+        }
         x++;
     }
     return largo;
@@ -248,16 +275,9 @@ int tamanio(Archivo a)
 
 bool hayComillas(string texto)
 {
-    char str[TEXTO_MAX];
-    texto.copy(str,sizeof(texto)-1);
-    if((str[0]=='"')&&(str[strlen(str)-1]=='"'))
-    {
+    if(texto.find('"') == 0 && texto.rfind('"') == texto.length() -1)
         return true;
-    }
-    else
-    {
-        return false;
-    }
+    return false;
 }
 
 Directorio CrearArchivo(Directorio d, string nombre)
@@ -266,10 +286,9 @@ Directorio CrearArchivo(Directorio d, string nombre)
     nuevoArchivo->nombreArchivo = nombre;
     nuevoArchivo->ptrsig = d->contenido;
     d->contenido = nuevoArchivo;
-    int x;
-    for(x=0; x<LARGO_MAX; x++)
+    for(int x = 0; x < LARGO_MAX; x++)
     {
-        d->contenido->contenido[x]=NULL;
+        d->contenido->contenido[x] = NULL;
     }
     return d;
 }
@@ -313,7 +332,9 @@ Directorio eliminarArchivo(Directorio d, string nombre)
     }
     return d;
 }
+/*Concatenacion(){
 
+}*/
 bool esVacio(Archivo a)
 {
     if(a == NULL) return true;
