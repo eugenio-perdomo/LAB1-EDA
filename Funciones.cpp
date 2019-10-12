@@ -243,9 +243,11 @@ int tamanio(Archivo a)
 {
     int largo=0,x=0;
 
-    while((sizeof(a->contenido[x])-1>0)&&(x<LARGO_MAX))
+    while(x<LARGO_MAX)
     {
-        largo=largo+sizeof(a->contenido[x])-1;
+        if(a->contenido[x]!=NULL){
+          largo=largo+sizeof(a->contenido[x])-1;
+                                 }
         x++;
     }
     return largo;
