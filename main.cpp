@@ -10,7 +10,9 @@ using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
-/** TODO CAT, UNDELETE, BC
+/** TODO CAT
+* UNDELETE
+* BC
 */
 int main()
 {
@@ -64,11 +66,14 @@ int main()
         {
             espacio = subComando.find(' ');
             subComando = subComando.substr(0,espacio);
-            MuestroRetorno(BF(d,subComando,0));
+            MuestroRetorno(BF(d,subComando,1));
         }
 
-        if(tipo.compare("CAT") == 0){}
-            //MuestroRetorno(CAT());
+        if(tipo.compare("CAT") == 0)
+        {
+            MuestroRetorno(CAT());
+        }
+
         if(tipo.compare("IC") == 0)
         {
             espacio = subComando.find(' ');
