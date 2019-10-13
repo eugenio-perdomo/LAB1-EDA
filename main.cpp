@@ -2,14 +2,16 @@
 #include <stdio.h>
 #include <string.h>
 
-#define TEXTO_MAX 50
-#define LARGO_MAX 5
-#define LARGONOMBRE 19
+#define TEXTO_MAX 50    // Cantidad maxima de caracteres por linea
+#define LARGO_MAX 5     // Cantidad maxima de lineas por archivo
+#define LARGONOMBRE 19  // Texto mas extension
 
 using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
+/** TODO CAT, UNDELETE, BC
+*/
 int main()
 {
     string comando,tipo,texto,subComando,nombre_archivo;
@@ -32,8 +34,10 @@ int main()
         {
             MuestroRetorno(CREATE(d,subComando));
         }
+
         if(tipo.compare("DIR") == 0)
             MuestroRetorno(DIR(d));
+
         if(tipo.compare("IF") == 0)
         {
             espacio = subComando.find(' ');
@@ -41,25 +45,30 @@ int main()
             subComando = subComando.substr(0,espacio);
             MuestroRetorno(IF(d,subComando,texto));
         }
+
         if(tipo.compare("TYPE") == 0)
         {
             MuestroRetorno(TYPE(d,subComando));
         }
+
         if(tipo.compare("DELETE") == 0)
         {
             MuestroRetorno(DELETE(d,subComando));
         }
 
         if(tipo.compare("UNDELETE") == 0)
-            cout << "IF";
+        {
+            MuestroRetorno(UNDELETE());
+        }
         if(tipo.compare("BF") == 0)
         {
             espacio = subComando.find(' ');
             subComando = subComando.substr(0,espacio);
             MuestroRetorno(BF(d,subComando,0));
         }
-        if(tipo.compare("CAT") == 0)
-            cout << "IF";
+
+        if(tipo.compare("CAT") == 0){}
+            //MuestroRetorno(CAT());
         if(tipo.compare("IC") == 0)
         {
             espacio = subComando.find(' ');
@@ -67,10 +76,15 @@ int main()
             subComando = subComando.substr(0,espacio);
             MuestroRetorno(IC(d,subComando,texto));
         }
+
         if(tipo.compare("BC") == 0)
-            cout << "IF";
+        {
+            MuestroRetorno(BC());
+        }
         if(tipo.compare("FIN") == 0)
+        {
             flag = false;
+        }
     }
     return 0;
 }
