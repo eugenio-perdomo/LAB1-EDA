@@ -133,38 +133,40 @@ TipoRet BF(Directorio d, string nombreArchivo, int linea)
     else
     {
         Archivo auxArchivo = d->contenido;
-        while(auxArchivo->nombreArchivo != nombreArchivo && auxArchivo != NULL)
+        while(!esVacio(auxArchivo))
         {
+            if(auxArchivo->nombreArchivo == nombreArchivo)
+            {
+                int x=0;
+                Cadena aux;
+                while(x < LARGO_MAX)
+                {
+                    if(auxArchivo->contenido[x] == NULL)
+                        x++;
+                    else
+                    {
+                        if(x == linea)
+                        {
+                            aux = auxArchivo->contenido[x];
+                            auxArchivo->contenido[x] = NULL;
+                            x = LARGO_MAX;
+                            delete aux;
+                        }
+                        else x++;
+                    }
+                }
+            }
             auxArchivo = auxArchivo->ptrsig;
         }
-
-        int x=0;
-        Cadena aux;
-        while(x<LARGO_MAX)
-        {
-            if(auxArchivo->contenido[x]==NULL)
-                x++;
-            else
-            {
-                if(x == linea)
-                {
-                    aux = auxArchivo->contenido[x];
-                    auxArchivo->contenido[x] = NULL;
-                    x = LARGO_MAX;
-                    delete aux;
-                }
-                else
-                    x++;
-            }
-        }
-        delete auxArchivo;
+        auxArchivo->lineas--;
         return OK;
     }
 }
 
-TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
+TipoRet CAT(/*Directorio d, string nombreArchivo1, string nombreArchivo2*/)
 {
-    /*if(nombreArchivo1 == nombreArchivo2) return ERROR;
+    /*
+    if(nombreArchivo1 == nombreArchivo2) return ERROR;
     bool flag1 = false, flag2 = false; ///Ver la cantidad de lineas y que no se pasen entre los archivos
     Archivo aux = d->contenido;
     while(!esVacio(aux)){
@@ -177,9 +179,11 @@ TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
     if(flag1 && flag2){
         Concatenacion();
         return OK;
-    }*/
+    }
+    */
     return NO_IMPLEMENTADO;
 }
+//Concatenacion(){}
 
 //opcionales
 TipoRet IC(Directorio d, string nombreArchivo, string texto)
@@ -332,9 +336,7 @@ Directorio eliminarArchivo(Directorio d, string nombre)
     }
     return d;
 }
-/*Concatenacion(){
 
-}*/
 bool esVacio(Archivo a)
 {
     if(a == NULL) return true;
