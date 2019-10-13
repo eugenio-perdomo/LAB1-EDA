@@ -1,7 +1,6 @@
 #ifndef DEFINICIONES_H_INCLUDED
 #define DEFINICIONES_H_INCLUDED
 
-
 typedef enum _retorno
 {
     OK,ERROR,NO_IMPLEMENTADO
@@ -47,6 +46,5 @@ bool hayComillas(std::string texto);
 Directorio CrearArchivo(Directorio d, std::string nombre_archivo);
 Directorio eliminarArchivo(Directorio d, std::string nombre);
 bool esVacio(Archivo a);
-
 
 #endif // DEFINICIONES_H_INCLUDED
