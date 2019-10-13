@@ -9,7 +9,7 @@ typedef char *Cadena;
 
 typedef struct _archivo
 {
-    std::string nombreArchivo;
+    string nombreArchivo;
     Cadena contenido[LARGO_MAX];
     _archivo *ptrsig;
     int lineas;
@@ -17,7 +17,7 @@ typedef struct _archivo
 
 typedef struct _directorio
 {
-    std::string nom;
+    string nom;
     Archivo contenido;
     //_directorio *subdir;
     _directorio *dirsig;
@@ -25,26 +25,26 @@ typedef struct _directorio
 
 //tipo1
 TipoRet DIR(Directorio d);
-TipoRet CREATE(Directorio d, std::string nombre_archivo);
-TipoRet IF(Directorio d, std::string nombreArchivo, std::string texto);
-TipoRet TYPE(Directorio d, std::string nombreArchivo);
+TipoRet CREATE(Directorio d, string nombre_archivo);
+TipoRet IF(Directorio d, string nombreArchivo, string texto);
+TipoRet TYPE(Directorio d, string nombreArchivo);
 
 //tipo2
-TipoRet DELETE(Directorio d, std::string palabra);
-TipoRet BF(Directorio d,string nombreArchivo, int linea);
-TipoRet CAT();
+TipoRet DELETE(Directorio d, string palabra);
+TipoRet BF(Directorio d, string nombreArchivo, int linea);
+TipoRet CAT(/*Directorio d, string nombreArchivo1, string nombreArchivo2*/);
 
 //opcionales
-TipoRet IC(Directorio d, std::string nombreArchivo, string texto);
+TipoRet IC(Directorio d, string nombreArchivo, string texto);
 TipoRet BC();
 TipoRet UNDELETE();
 
 //otras
 void MuestroRetorno(TipoRet ret);
 int tamanio(Archivo a);
-bool hayComillas(std::string texto);
-Directorio CrearArchivo(Directorio d, std::string nombre_archivo);
-Directorio eliminarArchivo(Directorio d, std::string nombre);
+bool hayComillas(string texto);
+Directorio CrearArchivo(Directorio d, string nombre_archivo);
+Directorio eliminarArchivo(Directorio d, string nombre);
 bool esVacio(Archivo a);
 
 #endif // DEFINICIONES_H_INCLUDED
