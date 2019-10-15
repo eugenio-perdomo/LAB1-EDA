@@ -36,7 +36,7 @@ TipoRet CAT();
 
 //opcionales
 TipoRet IC(Directorio d, std::string nombreArchivo, string texto);
-TipoRet BC();
+TipoRet BC(Directorio d,string nombreArchivo, int linea);
 TipoRet UNDELETE();
 
 //otras
