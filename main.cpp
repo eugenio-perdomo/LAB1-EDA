@@ -10,9 +10,7 @@ using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
-/** TODO CAT
-* UNDELETE
-* BC
+/** TODO CAT, UNDELETE, BC
 */
 int main()
 {
@@ -23,6 +21,8 @@ int main()
     d->dirsig = NULL;
     d->contenido = NULL;
     bool flag = true;
+    cargarDatosDePrueba(d);
+    cout << "/ ";
     while(flag == true)
     {
         getline(cin,comando,'\n');
@@ -66,14 +66,14 @@ int main()
         {
             espacio = subComando.find(' ');
             subComando = subComando.substr(0,espacio);
-            MuestroRetorno(BF(d,subComando,1));
+            MuestroRetorno(BF(d,subComando,0));
         }
 
         if(tipo.compare("CAT") == 0)
         {
-            MuestroRetorno(CAT());
-        }
 
+        }
+        //MuestroRetorno(CAT());
         if(tipo.compare("IC") == 0)
         {
             espacio = subComando.find(' ');
