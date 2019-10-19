@@ -1,4 +1,4 @@
-//tipo1
+/// TIPO 1 DE RETORNO
 TipoRet DIR(Directorio d)
 {
     if(d->contenido == NULL)
@@ -8,12 +8,31 @@ TipoRet DIR(Directorio d)
     }
     else
     {
+        bool BG_COLOR = true;
+        cout << "\e[36mNombre\t\t\tTipo\t\tTamanio\tLineas\n";
         Archivo aux = d->contenido;
         while(aux != NULL)
         {
-            cout << aux->nombreArchivo << "\tArchivo \t" << tamanio(aux) << "\t" << aux->lineas << endl;
+            if(BG_COLOR == true)
+            {
+                BG_COLOR = false;
+                cout << "\e[90m";
+            }
+            else
+            {
+                BG_COLOR = true;
+                cout << "\e[39m";
+            }
+            cout << aux->nombreArchivo;
+            if(aux->nombreArchivo.length() <= 7)
+                cout << "\t";
+            if(aux->nombreArchivo.length() <= 15)
+                cout << "\t";
+            cout << "\tArchivo \t" << tamanio(aux) << "\t" << aux->lineas << endl;
             aux = aux->ptrsig;
+
         }
+        cout << "\e[49m";
         delete aux;
     }
     return OK;
@@ -107,7 +126,7 @@ TipoRet TYPE(Directorio d, string nombre_Archivo)
     }
 }
 
-//tipo2
+/// TIPO 2 DE RETORNO
 TipoRet DELETE(Directorio d, string palabra)
 {
     Archivo aux = d->contenido;
@@ -132,34 +151,68 @@ TipoRet BF(Directorio d, string nombreArchivo, int linea)
     }
     else
     {
-        Archivo auxArchivo = d->contenido;
-        while(!esVacio(auxArchivo))
+        if(d->contenido->nombreArchivo.compare(nombreArchivo)==0)
         {
-            if(auxArchivo->nombreArchivo == nombreArchivo)
+            int x=0;
+            while(d->contenido->contenido[x]!=NULL)
             {
-                int x=0;
-                Cadena aux;
-                while(x < LARGO_MAX)
+                x++;
+            }
+            int y;
+            if(x<linea)
+            {
+                for(y=x-1; y>-1; y--)
                 {
-                    if(auxArchivo->contenido[x] == NULL)
-                        x++;
-                    else
-                    {
-                        if(x == linea)
-                        {
-                            aux = auxArchivo->contenido[x];
-                            auxArchivo->contenido[x] = NULL;
-                            x = LARGO_MAX;
-                            delete aux;
-                        }
-                        else x++;
-                    }
+                    delete d->contenido->contenido[y];
                 }
             }
-            auxArchivo = auxArchivo->ptrsig;
+            else
+            {
+                for(y=linea; y>0; y--)
+                {
+                    delete d->contenido->contenido[x-1];
+                    x--;
+                }
+            }
+            return OK;
         }
-        auxArchivo->lineas--;
-        return OK;
+        else
+        {
+            Archivo aux= d->contenido->ptrsig;
+            while((aux->nombreArchivo.compare(nombreArchivo)!=0)&&(!esVacio(aux)))
+            {
+                aux=aux->ptrsig;
+            }
+            if(esVacio(aux))
+            {
+                return ERROR;
+            }
+            else
+            {
+                int x=0;
+                while(aux->contenido[x]!=NULL)
+                {
+                    x++;
+                }
+                int y;
+                if(x<linea)
+                {
+                    for(y=x-1; y>-1; y--)
+                    {
+                        delete aux->contenido[y];
+                    }
+                }
+                else
+                {
+                    for(y=linea; y>0; y--)
+                    {
+                        delete aux->contenido[x-1];
+                        x--;
+                    }
+                }
+                return OK;
+            }
+        }
     }
 }
 
@@ -183,9 +236,8 @@ TipoRet CAT(/*Directorio d, string nombreArchivo1, string nombreArchivo2*/)
     */
     return NO_IMPLEMENTADO;
 }
-//Concatenacion(){}
 
-//opcionales
+/// TIPO RETORNO OPCIONALES
 TipoRet IC(Directorio d, string nombreArchivo, string texto)
 {
     if(esVacio(d->contenido))
@@ -246,19 +298,19 @@ TipoRet UNDELETE()
     return NO_IMPLEMENTADO;
 }
 
-//otras
+/// OTRAS FUNCIONES
 void MuestroRetorno(TipoRet ret)
 {
     switch(ret)
     {
     case OK:
-        cout<<"OK"<<endl;
+        cout<<"\e[32mOK\e[0m"<<endl;
         break;
     case ERROR:
-        cout<<"ERROR"<<endl;
+        cout<<"\e[31mERROR\e[0m"<<endl;
         break;
     case NO_IMPLEMENTADO:
-        cout<<"NO IMPLEMENTADO"<<endl;
+        cout<<"\e[33mNO IMPLEMENTADO\e[0m"<<endl;
         break;
     }
 }
@@ -337,8 +389,29 @@ Directorio eliminarArchivo(Directorio d, string nombre)
     return d;
 }
 
+//Concatenacion(){}
+
 bool esVacio(Archivo a)
 {
     if(a == NULL) return true;
     else return false;
+}
+
+void cargarDatosDePrueba(Directorio d)
+{
+    string a;
+    a = (char)34;
+    d = CrearArchivo(d,"algo.txt");
+    d = CrearArchivo(d,"Ozzy Osbourne.mp3");
+    IC(d,"Ozzy Osbourne.mp3",a+"Hellraiser"+a);
+    IC(d,"Ozzy Osbourne.mp3",a+"Crazy Train"+a);
+    d = CrearArchivo(d,"Nirvana.mp3");
+    IC(d,"Nirvana.mp3",a+"Smells like teen spirit"+a);
+    IC(d,"Nirvana.mp3",a+"Come as you are"+a);
+    IC(d,"Nirvana.mp3",a+"All Apologies"+a);
+    d = CrearArchivo(d,"Led_Zeppelin.mp3");
+    IC(d,"Led_Zeppelin.mp3",a+"Stairway to heaven"+a);
+    IC(d,"Led_Zeppelin.mp3",a+"Whole Lotta Love"+a);
+    IC(d,"Led_Zeppelin.mp3",a+"Inmigrant Song"+a);
+    IC(d,"Led_Zeppelin.mp3",a+"Black Dog"+a);
 }
