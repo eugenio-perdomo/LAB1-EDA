@@ -4,7 +4,6 @@ TipoRet DIR(Directorio d)
     if(d->contenido == NULL)
     {
         cout<<"Directorio Vacio"<<endl;
-        return ERROR;
     }
     else
     {
