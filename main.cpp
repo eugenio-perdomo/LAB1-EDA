@@ -10,7 +10,7 @@ using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
-/** TODO CAT, UNDELETE, BC
+/** TODO CAT, UNDELETE
 */
 int main()
 {
@@ -18,7 +18,7 @@ int main()
     int espacio = 0,pos = 0;
     Directorio d = NULL;
     d = new _directorio;
-    d->dirsig = NULL;
+    d->subdir = NULL;
     d->contenido = NULL;
     bool flag = true;
     while(flag == true)
@@ -79,7 +79,7 @@ int main()
 
         if(tipo.compare("BC") == 0)
         {
-            MuestroRetorno(BC());
+            cout<<"BC";
         }
         if(tipo.compare("FIN") == 0)
         {
