@@ -354,4 +354,88 @@ bool esVacio(Archivo a)
     else return false;
 }
 
+bool esVacio2(Directorio d)
+{
+    if(d==NULL){
+      return true;
+               }else{
+                  return false;
+                    }
+}
+
+Archivo buscoArchivo(Archivo a, string nom)
+{
+    if(a->nombreArchivo==nom){
+      return a;
+                             }else{
+                                if(hojaArch(a)){
+                                  return a;
+                                               }else{
+                                                  if(nom<a->nombreArchivo){
+                                                    return buscoArchivo(a->archizq,nom);
+                                                                          }else{
+                                                                             return buscoArchivo(a->archder,nom);
+                                                                               }
+                                                    }
+                        }
+}
+
+Directorio buscoDirectortio(Directorio d, string nom)
+{
+    if(d->nom==nom){
+      return d;
+                   }else{
+                      if(hojaDir(d)){
+                        return d;
+                                    }else{
+                                       if(nom<d->nom){
+                                         return buscoDirectortio(d->dirizq,nom);
+                                                     }else{
+                                                        return buscoDirectortio(d->dirder,nom);
+                                                          }
+                                         }
+                        }
+}
+
+bool hojaArch(Archivo a)
+{
+    if((esVacio(a->archizq))&&(esVacio(a->archder))){
+      return true;
+                                                    }else{
+                                                       return false;
+                                                         }
+}
+
+bool hojaDir(Directorio d)
+{
+    if((esVacio2(d->dirizq))&&(esVacio2(d->dirder))){
+      return true;
+                                                    }else{
+                                                       return false;
+                                                         }
+}
+
+void muestroArchivos(Archivo a)
+{
+    if(!esVacio(a)){
+      muestroArchivos(a->archizq);
+      cout<<a->nombreArchivo<<"     Archivo     "<<tamanio(a);
+      muestroArchivos(a->archder);
+                   }
+}
+
+void muestroDirectorios(Directorio d)
+{
+    if(!esVacio2(d)){
+      muestroDirectorios(d->dirizq);
+      cout<<d->nom<<"     Directorio";
+      muestroDirectorios(d->dirder);
+                    }
+}
+
+void muestroTodo(Directorio raiz)
+{
+    ///queda para despues
+}
+
   
