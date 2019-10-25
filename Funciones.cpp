@@ -15,6 +15,9 @@ TipoRet DIR(Directorio d)
             aux = aux->ptrsig;
         }
         delete aux;
+        /*muestroArchivos(d->contenido);
+        cout<<endl;
+        muestroDirectorios(d->dirsig);*/
     }
     return OK;
 }
@@ -28,9 +31,10 @@ TipoRet CREATE(Directorio d, string nombre_archivo)
         if(posicion < 0)
         {
             return ERROR;
-        }
+        }else{
         d = CrearArchivo(d,nombre_archivo);
         return OK;
+             }
     }
     else return ERROR;
 }
@@ -452,7 +456,7 @@ void muestroArchivos(Archivo a)
 {
     if(!esVacio(a)){
       muestroArchivos(a->archizq);
-      cout<<a->nombreArchivo<<"     Archivo     "<<tamanio(a);
+      cout<<a->nombreArchivo<<"     Archivo     "<<tamanio(a)<<endl;
       muestroArchivos(a->archder);
                    }
 }
@@ -461,7 +465,7 @@ void muestroDirectorios(Directorio d)
 {
     if(!esVacio2(d)){
       muestroDirectorios(d->dirizq);
-      cout<<d->nom<<"     Directorio";
+      cout<<d->nom<<"     Directorio"<<endl;
       muestroDirectorios(d->dirder);
                     }
 }
@@ -470,5 +474,3 @@ void muestroTodo(Directorio raiz)
 {
     ///queda para despues
 }
-
-  
