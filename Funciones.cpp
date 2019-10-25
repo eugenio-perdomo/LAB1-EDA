@@ -230,9 +230,60 @@ TipoRet IC(Directorio d, string nombreArchivo, string texto)
     }
 }
 
-TipoRet BC()
+TipoRet BC(Directorio d,string nombreArchivo, int linea)
 {
-    return NO_IMPLEMENTADO;
+    if(esVacio(d->contenido)){
+        return ERROR;
+                             }else{
+                                if(d->contenido->nombreArchivo.compare(nombreArchivo)==0){
+                                  int x=0;
+                                  while(d->contenido->contenido[x]!=NULL){
+                                    x++;
+                                                                         }
+                                  int y;
+                                  if(x<=linea){
+                                    for(y=x-1;y>-1;y--){
+                                      delete d->contenido->contenido[y];
+                                                       }
+                                              }else{
+                                                 for(y=0;y<x-linea;y++){
+                                                   strcpy(d->contenido->contenido[y],d->contenido->contenido[y+linea]);
+                                                                       }
+                                                 for(y=x-linea;y<LARGO_MAX;y++){
+                                                   delete d->contenido->contenido[y];
+                                                                               }
+                                                   }
+                                  return OK;
+                                                                                         }else{
+                                                                                            Archivo aux= d->contenido->ptrsig;
+                                                                                            while((aux->nombreArchivo.compare(nombreArchivo)!=0)&&(!esVacio(aux))){
+                                                                                              aux=aux->ptrsig;
+                                                                                                                                                                  }
+                                                                                            if(esVacio(aux)){
+                                                                                              return ERROR;
+                                                                                                            }else{
+                                                                                                               int x=0;
+                                                                                                               while(aux->contenido[x]!=NULL){
+                                                                                                                 x++;
+                                                                                                                                             }
+                                                                                                               int y;
+                                                                                                               if(x<=linea){
+                                                                                                                 for(y=x-1;y>-1;y--){
+                                                                                                                   delete aux->contenido[y];
+                                                                                                                                    }
+                                                                                                                           }else{
+                                                                                                                              for(y=0;y<x-linea;y++){
+                                                                                                                                strcpy(aux->contenido[y],aux->contenido[y+linea]);
+                                                                                                                                                    }
+                                                                                                                              for(y=x-linea;y<LARGO_MAX;y++){
+                                                                                                                                 delete aux->contenido[y];
+                                                                                                                                                            }
+                                                                                                                                }
+                                                                                                               return OK;
+                                                                                                                 }
+                                                                                              }
+                                  }
+
 }
 
 TipoRet UNDELETE()
