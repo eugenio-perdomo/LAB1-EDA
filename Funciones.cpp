@@ -147,11 +147,8 @@ TipoRet BF(Directorio d, string nombreArchivo, int linea)
                                                   }
                                   return OK;
                                                                                          }else{
-                                                                                            Archivo aux= d->contenido->ptrsig;
-                                                                                            while((aux->nombreArchivo.compare(nombreArchivo)!=0)&&(!esVacio(aux))){
-                                                                                              aux=aux->ptrsig;
-                                                                                                                                                                  }
-                                                                                            if(esVacio(aux)){
+                                                                                            Archivo aux= buscoArchivo(d->contenido,nombreArchivo);
+                                                                                            if(aux->nombreArchivo!=nombreArchivo){
                                                                                               return ERROR;
                                                                                                             }else{
                                                                                                                int x=0;
