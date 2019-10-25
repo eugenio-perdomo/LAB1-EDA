@@ -79,32 +79,20 @@ TipoRet IF(Directorio d, string nombreArchivo, string texto)
 
 TipoRet TYPE(Directorio d, string nombre_Archivo)
 {
-    if(esVacio(d->contenido))
-    {
-        return ERROR;
-    }
-    else
-    {
-        Archivo aux = d->contenido;
-        while(aux != NULL)
-        {
-            if(aux->nombreArchivo == nombre_Archivo)
-            {
-                int x=0;
-                while(x < LARGO_MAX)
-                {
-                    if(aux->contenido[x] != NULL)
-                    {
-                        cout << aux->contenido[x] << endl;
-                    }
-                    x++;
-                }
-            }
-            aux = aux->ptrsig;
-        }
-        delete aux;
-        return OK;
-    }
+    Archivo aux=buscoArchivo(d->contenido,nombre_Archivo);
+    if(aux->nombreArchivo!=nombre_Archivo){
+      return ERROR;
+                                          }else{
+                                             if(aux->contenido[0]==NULL){
+                                               cout<<"Archivo vacio"<<endl;
+                                                                        }else{
+                                                                           int x=0;
+                                                                           while(aux->contenido[x]!=NULL){
+                                                                             cout<<aux->contenido[x]<<endl;
+                                                                                                         }
+                                                                             }
+                                             return OK;
+                                               }
 }
 
 //tipo2
