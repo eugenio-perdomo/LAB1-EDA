@@ -204,11 +204,8 @@ TipoRet IC(Directorio d, string nombreArchivo, string texto)
     }
     else
     {
-        Archivo aux = d->contenido;
-        while(aux->nombreArchivo != nombreArchivo && aux != NULL)
-        {
-            aux = aux->ptrsig;
-        }
+        Archivo aux = buscoArchivo(d->contenido,nombreArchivo);
+        if(aux->nombreArchivo==nombreArchivo){
         if(!hayComillas(texto))
         {
             cout<<"No tiene comillas\n";
@@ -242,6 +239,9 @@ TipoRet IC(Directorio d, string nombreArchivo, string texto)
                 return OK;
             }
         }
+                                             }else{
+                                                return ERROR;
+                                                  }
     }
 }
 
