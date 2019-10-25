@@ -5,6 +5,7 @@ typedef enum _retorno
 {
     OK,ERROR,NO_IMPLEMENTADO
 } TipoRet;
+
 typedef char *Cadena;
 
 typedef struct _archivo
@@ -21,7 +22,7 @@ typedef struct _directorio
 {
     std::string nom;
     Archivo contenido;
-    _directorio *dirsig;
+    _directorio *subdir;
     _directorio *dirizq;
     _directorio *dirder;
 }*Directorio;
