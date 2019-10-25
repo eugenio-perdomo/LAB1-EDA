@@ -13,6 +13,8 @@ typedef struct _archivo
     Cadena contenido[LARGO_MAX];
     _archivo *ptrsig;
     int lineas;
+    _archivo *archizq;
+    _archivo *archder;
 }*Archivo;
 
 typedef struct _directorio
@@ -21,6 +23,8 @@ typedef struct _directorio
     Archivo contenido;
     //_directorio *subdir;
     _directorio *dirsig;
+    _directorio *dirizq;
+    _directorio *dirder;
 }*Directorio;
 
 //tipo1
