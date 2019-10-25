@@ -21,7 +21,6 @@ typedef struct _directorio
 {
     std::string nom;
     Archivo contenido;
-    //_directorio *subdir;
     _directorio *dirsig;
     _directorio *dirizq;
     _directorio *dirder;
