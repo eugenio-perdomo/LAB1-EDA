@@ -93,11 +93,24 @@ TipoRet TYPE(Directorio d, string nombre_Archivo)
                                                                            int x=0;
                                                                            while(aux->contenido[x]!=NULL){
                                                                              cout<<aux->contenido[x]<<endl;
+                                                                             x++;
                                                                                                          }
                                                                              }
                                              return OK;
                                                }
 }
+
+TipoRet MKDIR()
+{
+    return NO_IMPLEMENTADO;
+}
+
+TipoRet CD()
+{
+    return NO_IMPLEMENTADO;
+}
+
+
 
 //tipo2
 TipoRet DELETE(Directorio d, string palabra)
@@ -183,6 +196,18 @@ TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
     }*/
     return NO_IMPLEMENTADO;
 }
+
+
+TipoRet PWD()
+{
+    return NO_IMPLEMENTADO;
+}
+TipoRet RMDIR()
+{
+    return NO_IMPLEMENTADO;
+}
+
+
 
 //opcionales
 TipoRet IC(Directorio d, string nombreArchivo, string texto)
@@ -292,6 +317,18 @@ TipoRet UNDELETE()
     //exclusivamente el ultimo
     return NO_IMPLEMENTADO;
 }
+
+TipoRet DIR_S()
+{
+    return NO_IMPLEMENTADO;
+}
+TipoRet COPY()
+{
+    return NO_IMPLEMENTADO;
+}
+
+
+
 
 //otras
 void MuestroRetorno(TipoRet ret)
@@ -489,4 +526,23 @@ void muestroDirectorios(Directorio d)
 void muestroTodo(Directorio raiz)
 {
     ///queda para despues
+}
+
+void cargarDatosDePrueba(Directorio d)
+{
+    string a;
+    a = (char)34;
+    d = CrearArchivo(d,"algo.txt");
+    d = CrearArchivo(d,"Ozzy Osbourne.mp3");
+    IC(d,"Ozzy Osbourne.mp3",a+"Hellraiser"+a);
+    IC(d,"Ozzy Osbourne.mp3",a+"Crazy Train"+a);
+    d = CrearArchivo(d,"Nirvana.mp3");
+    IC(d,"Nirvana.mp3",a+"Smells like teen spirit"+a);
+    IC(d,"Nirvana.mp3",a+"Come as you are"+a);
+    IC(d,"Nirvana.mp3",a+"All Apologies"+a);
+    d = CrearArchivo(d,"Led_Zeppelin.mp3");
+    IC(d,"Led_Zeppelin.mp3",a+"Stairway to heaven"+a);
+    IC(d,"Led_Zeppelin.mp3",a+"Whole Lotta Love"+a);
+    IC(d,"Led_Zeppelin.mp3",a+"Inmigrant Song"+a);
+    IC(d,"Led_Zeppelin.mp3",a+"Black Dog"+a);
 }
