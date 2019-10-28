@@ -409,9 +409,17 @@ Archivo buscoArchivo(Archivo a, string nom)
                                   return a;
                                                }else{
                                                   if(nom<a->nombreArchivo){
-                                                    return buscoArchivo(a->archizq,nom);
+                                                    if(esVacio(a->archizq)){
+                                                      return a;
+                                                                           }else{
+                                                                              return buscoArchivo(a->archizq,nom);
+                                                                                }
                                                                           }else{
-                                                                             return buscoArchivo(a->archder,nom);
+                                                                             if(esVacio(a->archder)){
+                                                                               return a;
+                                                                                                    }else{
+                                                                                                       return buscoArchivo(a->archder,nom);
+                                                                                                         }
                                                                                }
                                                     }
                         }
@@ -426,9 +434,17 @@ Directorio buscoDirectortio(Directorio d, string nom)
                         return d;
                                     }else{
                                        if(nom<d->nom){
-                                         return buscoDirectortio(d->dirizq,nom);
+                                         if(esVacio2(d->dirizq)){
+                                           return d;
+                                                                }else{
+                                                                   return buscoDirectortio(d->dirizq,nom);
+                                                                     }
                                                      }else{
-                                                        return buscoDirectortio(d->dirder,nom);
+                                                        if(esVacio2(d->dirder)){
+                                                          return d;
+                                                                               }else{
+                                                                                  return buscoDirectortio(d->dirder,nom);
+                                                                                    }
                                                           }
                                          }
                         }
