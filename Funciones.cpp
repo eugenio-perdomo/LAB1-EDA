@@ -8,34 +8,8 @@ TipoRet DIR(Directorio d)
     }
     else
     {
-        /*bool BG_COLOR = true;
-        cout << "\e[36mNombre\t\t\tTipo\t\tTamanio\tLineas\n";
-        Archivo aux = d->contenido;
-        while(aux != NULL)
-        {
-            if(BG_COLOR == true)
-            {
-                BG_COLOR = false;
-                cout << "\e[90m";
-            }
-            else
-            {
-                BG_COLOR = true;
-                cout << "\e[39m";
-            }
-            cout << aux->nombreArchivo;
-            if(aux->nombreArchivo.length() <= 7)
-                cout << "\t";
-            if(aux->nombreArchivo.length() <= 15)
-                cout << "\t";
-            cout << "\tArchivo \t" << tamanio(aux) << "\t" << aux->lineas << endl;
-            aux = aux->ptrsig;
-
-        }
-        cout << "\e[49m";*/
         muestroArchivos(d->contenido);
         cout<<endl;
-        //muestroDirectorios(d->dirsig);*/
     }
     return OK;
 }
@@ -52,7 +26,7 @@ TipoRet CREATE(Directorio d, string nombre_archivo)
         }
         else
         {
-            d = CrearArchivo(d, nombre_archivo);
+            d = CrearArchivo(d,nombre_archivo);
             return OK;
         }
     }
@@ -124,6 +98,16 @@ TipoRet TYPE(Directorio d, string nombre_Archivo)
         }
     }
     return OK;
+
+
+TipoRet MKDIR()
+{
+    return NO_IMPLEMENTADO;
+}
+
+TipoRet CD()
+{
+    return NO_IMPLEMENTADO;
 }
 
 //tipo2
@@ -152,7 +136,6 @@ TipoRet BF(Directorio d, string nombreArchivo, int linea)
     else
     {
         if(d->contenido->nombreArchivo.compare(nombreArchivo)==0)
-
         {
             int x=0;
             while(d->contenido->contenido[x]!=NULL)
@@ -233,6 +216,15 @@ TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
     return NO_IMPLEMENTADO;
 }
 
+TipoRet PWD()
+{
+    return NO_IMPLEMENTADO;
+}
+TipoRet RMDIR()
+{
+    return NO_IMPLEMENTADO;
+}
+
 //opcionales
 TipoRet IC(Directorio d, string nombreArchivo, string texto)
 {
@@ -274,10 +266,6 @@ TipoRet IC(Directorio d, string nombreArchivo, string texto)
                         }
                     }
                     texto.copy(aux->contenido[0],TEXTO_MAX);
-                    for(x=texto.length(); x<TEXTO_MAX; x++)
-                    {
-                        aux->contenido[0][x]=' ';
-                    }
                     aux->lineas++;
                     return OK;
                 }
@@ -372,6 +360,15 @@ TipoRet UNDELETE()
     return NO_IMPLEMENTADO;
 }
 
+TipoRet DIR_S()
+{
+    return NO_IMPLEMENTADO;
+}
+TipoRet COPY()
+{
+    return NO_IMPLEMENTADO;
+}
+
 //otras
 void MuestroRetorno(TipoRet ret)
 {
@@ -428,40 +425,21 @@ Directorio CrearArchivo(Directorio d, string nombre)
     ///ORDEN ALFABETICO
     else
     {
-        /*cout << a;
-        if(d->contenido->nombreArchivo == nombre)
-            cout << "Ya existe\n";
-
-        else if(d->contenido->nombreArchivo > nombre)
-
-            d = CrearArchivo(d, a->archizq, nombre);
-
-        else
-            d = CrearArchivo(d, a->archder, nombre);*/
         Archivo aux = buscoArchivo(d->contenido,nombre);
         if(aux->nombreArchivo == nombre)
-        {
             cout << "Ya existe";
-        }
-        else
-        {
+        else{
             Archivo nuevoArchivo = new _archivo;
             nuevoArchivo->nombreArchivo = nombre;
             nuevoArchivo->archizq = NULL;
             nuevoArchivo->archder = NULL;
 
             for(int x = 0; x < LARGO_MAX; x++)
-            {
                 nuevoArchivo->contenido[x] = NULL;
-            }
             if(nuevoArchivo->nombreArchivo<aux->nombreArchivo)
-            {
                 aux->archizq=nuevoArchivo;
-            }
             else
-            {
                 aux->archder=nuevoArchivo;
-            }
         }
     }
     return d;
@@ -472,7 +450,6 @@ Directorio eliminarArchivo(Directorio d, string nombre)
 
     Archivo aux = d->contenido;
     Archivo ant = NULL;
-    if()
     while(!esVacio(aux))
     {
         if(aux->nombreArchivo.compare(nombre) == 0)
@@ -507,7 +484,6 @@ Directorio eliminarArchivo(Directorio d, string nombre)
     }
     return d;
 }
-
 /*Concatenacion(){
 }*/
 bool esVacio(Archivo a)
@@ -518,14 +494,8 @@ bool esVacio(Archivo a)
 
 bool esVacioDir(Directorio d)
 {
-    if(d==NULL)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    if(d == NULL) return true;
+        else return false;
 }
 
 Archivo buscoArchivo(Archivo a, string nom)
@@ -570,7 +540,7 @@ Archivo buscoArchivo(Archivo a, string nom)
 
 Directorio buscoDirectortio(Directorio d, string nom)
 {
-    if(d->nom==nom)
+    if(d->nom == nom)
     {
         return d;
     }
