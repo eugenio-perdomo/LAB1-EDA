@@ -10,7 +10,8 @@ using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
-/** TODO CAT, UNDELETE
+/** TODO 
+    CAT, UNDELETE, DELETE, MKDIR, CD, PWD, RMDIR, DIR_S, COPY
 */
 int main()
 {
