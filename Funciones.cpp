@@ -98,7 +98,7 @@ TipoRet TYPE(Directorio d, string nombre_Archivo)
         }
     }
     return OK;
-
+}
 
 TipoRet MKDIR()
 {
