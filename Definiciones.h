@@ -29,8 +29,8 @@ typedef struct _directorio
 
 //tipo1
 TipoRet DIR(Directorio d);
-TipoRet CREATE(Directorio d, std::string nombre_archivo);
-TipoRet IF(Directorio d, std::string nombreArchivo, std::string texto);
+TipoRet CREATE(Directorio &d, std::string nombre_archivo);
+TipoRet IF(Directorio &d, std::string nombreArchivo, std::string texto);
 TipoRet TYPE(Directorio d, std::string nombreArchivo);
 
 TipoRet MKDIR();
@@ -38,8 +38,8 @@ TipoRet CD();
 
 
 //tipo2
-TipoRet DELETE(Directorio d, std::string palabra);
-TipoRet BF(Directorio d,string nombreArchivo, int linea);
+TipoRet DELETE(Directorio &d, std::string palabra);
+TipoRet BF(Directorio &d,string nombreArchivo, int linea);
 TipoRet CAT();
 
 TipoRet PWD();
@@ -48,7 +48,7 @@ TipoRet RMDIR();
 
 
 //opcionales
-TipoRet IC(Directorio d, std::string nombreArchivo, string texto);
+TipoRet IC(Directorio &d, std::string nombreArchivo, string texto);
 TipoRet BC();
 TipoRet UNDELETE();
 
@@ -73,6 +73,4 @@ void muestroArchivos(Archivo a);
 void muestroDirectorios(Directorio d);
 void muestroTodo(Directorio raiz);
 
-void cargarDatosDePrueba(Directorio d);
-
-#endif // DEFINICIONES_H_INCLUDED
+void cargarDatosDePrueba(Directorio &d);
