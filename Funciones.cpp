@@ -471,16 +471,16 @@ Directorio buscoDirectortio(Directorio d, string nom)
                         return d;
                                     }else{
                                        if(nom<d->nom){
-                                         if(esVacio2(d->dirizq)){
+                                         if(esVacio2(d->hermanoizq)){
                                            return d;
                                                                 }else{
-                                                                   return buscoDirectortio(d->dirizq,nom);
+                                                                   return buscoDirectortio(d->hermanoizq,nom);
                                                                      }
                                                      }else{
-                                                        if(esVacio2(d->dirder)){
+                                                        if(esVacio2(d->hermanoder)){
                                                           return d;
                                                                                }else{
-                                                                                  return buscoDirectortio(d->dirder,nom);
+                                                                                  return buscoDirectortio(d->hermanoder,nom);
                                                                                     }
                                                           }
                                          }
@@ -498,7 +498,7 @@ bool hojaArch(Archivo a)
 
 bool hojaDir(Directorio d)
 {
-    if((esVacio2(d->dirizq))&&(esVacio2(d->dirder))){
+    if((esVacio2(d->hermanoder))&&(esVacio2(d->hermanoizq))){
       return true;
                                                     }else{
                                                        return false;
