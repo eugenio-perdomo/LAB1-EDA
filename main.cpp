@@ -19,8 +19,10 @@ int main()
     int espacio = 0,pos = 0;
     Directorio d = NULL;
     d = new _directorio;
+    d->nom="Directorio1";
     d->hijo = NULL;
     d->contenido = NULL;
+    cargarDatosDePrueba(d);
     bool flag = true;
     while(flag == true)
     {
