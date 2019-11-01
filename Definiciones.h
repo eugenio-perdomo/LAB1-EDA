@@ -22,9 +22,9 @@ typedef struct _directorio
 {
     std::string nom;
     Archivo contenido;
-    _directorio *hijo;
-    _directorio *hermanoizq;
-    _directorio *hermanoder;
+    _directorio *subdir;
+    _directorio *dirizq;
+    _directorio *dirder;
 }*Directorio;
 
 //tipo1
