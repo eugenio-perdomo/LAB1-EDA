@@ -4,25 +4,24 @@ TipoRet DIR(Directorio d)
     if(d->contenido == NULL)
     {
         cout<<"Directorio Vacio"<<endl;
-        return ERROR;
     }
     else
     {
-        Archivo aux = d->contenido;
+        /*Archivo aux = d->contenido;
         while(aux != NULL)
         {
             cout << aux->nombreArchivo << "\tArchivo \t" << tamanio(aux) << "\t" << aux->lineas << endl;
             aux = aux->ptrsig;
         }
-        delete aux;
-        /*muestroArchivos(d->contenido);
-        cout<<endl;
+        delete aux;*/
+        muestroArchivos(d->contenido);
+        /*cout<<endl;
         muestroDirectorios(d->dirsig);*/
     }
     return OK;
 }
 
-TipoRet CREATE(Directorio d, string nombre_archivo)
+TipoRet CREATE(Directorio &d, string nombre_archivo)
 {
     int posicion = 0;
     if(nombre_archivo.length() < LARGONOMBRE)
@@ -32,14 +31,23 @@ TipoRet CREATE(Directorio d, string nombre_archivo)
         {
             return ERROR;
         }else{
-        d = CrearArchivo(d,nombre_archivo);
-        return OK;
+        if(esVacio(d->contenido)){
+          d = CrearArchivo(d,nombre_archivo);
+          return OK;
+                                 }
+        if(buscoArchivo(d->contenido,nombre_archivo)->nombreArchivo==nombre_archivo){
+          return ERROR;
+                                                                                    }else{
+                                                                                      d = CrearArchivo(d,nombre_archivo);
+                                                                                      return OK;
+                                                                                         }
+
              }
     }
     else return ERROR;
 }
 
-TipoRet IF(Directorio d, string nombreArchivo, string texto)
+TipoRet IF(Directorio &d, string nombreArchivo, string texto)
 {
     if(esVacio(d->contenido))
     {
@@ -113,7 +121,7 @@ TipoRet CD()
 
 
 //tipo2
-TipoRet DELETE(Directorio d, string palabra)
+TipoRet DELETE(Directorio &d, string palabra)
 {
     Archivo aux = d->contenido;
     while(!esVacio(aux))
@@ -121,15 +129,24 @@ TipoRet DELETE(Directorio d, string palabra)
         if(aux->nombreArchivo.compare(palabra) == 0)
         {
             cout << palabra << endl;
+            //
+            if(!hojaArch(aux)){
+              ///desenganchar y enganchar todo;
+                              }
             d = eliminarArchivo(d,palabra);
             return OK;
-        }
-        aux = aux->ptrsig;
+        }else{
+           if(palabra<aux->nombreArchivo){
+             aux=aux->archizq;
+                                         }else{
+                                            aux=aux->archder;
+                                              }
+             }
     }
     return ERROR;
 }
 
-TipoRet BF(Directorio d, string nombreArchivo, int linea)
+TipoRet BF(Directorio &d, string nombreArchivo, int linea)
 {
     if(esVacio(d->contenido)){
         return ERROR;
@@ -178,7 +195,7 @@ TipoRet BF(Directorio d, string nombreArchivo, int linea)
 
 }
 
-TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
+TipoRet CAT(Directorio &d, string nombreArchivo1, string nombreArchivo2)
 {
     /*if(nombreArchivo1 == nombreArchivo2) return ERROR;
     bool flag1 = false, flag2 = false; ///Ver la cantidad de lineas y que no se pasen entre los archivos
@@ -210,7 +227,7 @@ TipoRet RMDIR()
 
 
 //opcionales
-TipoRet IC(Directorio d, string nombreArchivo, string texto)
+TipoRet IC(Directorio &d, string nombreArchivo, string texto)
 {
     if(esVacio(d->contenido))
     {
@@ -259,7 +276,7 @@ TipoRet IC(Directorio d, string nombreArchivo, string texto)
     }
 }
 
-TipoRet BC(Directorio d,string nombreArchivo, int linea)
+TipoRet BC(Directorio &d,string nombreArchivo, int linea)
 {
     if(esVacio(d->contenido)){
         return ERROR;
@@ -372,12 +389,22 @@ Directorio CrearArchivo(Directorio d, string nombre)
 {
     Archivo nuevoArchivo = new _archivo;
     nuevoArchivo->nombreArchivo = nombre;
-    nuevoArchivo->ptrsig = d->contenido;
-    d->contenido = nuevoArchivo;
     for(int x = 0; x < LARGO_MAX; x++)
     {
-        d->contenido->contenido[x] = NULL;
+        nuevoArchivo->contenido[x] = NULL;
     }
+    nuevoArchivo->archder=NULL;
+    nuevoArchivo->archizq=NULL;
+    if(esVacio(d->contenido)){
+      d->contenido=nuevoArchivo;
+                             }else{
+                                Archivo aux=buscoArchivo(d->contenido,nombre);
+                                if(aux->nombreArchivo>nombre){
+                                  aux->archizq=nuevoArchivo;
+                                                             }else{
+                                                                aux->archder=nuevoArchivo;
+                                                                  }
+                                  }
     return d;
 }
 
@@ -517,9 +544,9 @@ void muestroArchivos(Archivo a)
 void muestroDirectorios(Directorio d)
 {
     if(!esVacio2(d)){
-      muestroDirectorios(d->dirizq);
+      muestroDirectorios(d->hermanoizq);
       cout<<d->nom<<"     Directorio"<<endl;
-      muestroDirectorios(d->dirder);
+      muestroDirectorios(d->hermanoder);
                     }
 }
 
@@ -528,7 +555,7 @@ void muestroTodo(Directorio raiz)
     ///queda para despues
 }
 
-void cargarDatosDePrueba(Directorio d)
+void cargarDatosDePrueba(Directorio &d)
 {
     string a;
     a = (char)34;
