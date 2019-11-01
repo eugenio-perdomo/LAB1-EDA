@@ -19,7 +19,7 @@ int main()
     int espacio = 0,pos = 0;
     Directorio d = NULL;
     d = new _directorio;
-    d->subdir = NULL;
+    d->hijo = NULL;
     d->contenido = NULL;
     bool flag = true;
     while(flag == true)
