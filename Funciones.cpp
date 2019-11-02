@@ -1,20 +1,18 @@
-//tipo1
+/// TIPO 1
 TipoRet DIR(Directorio d)
 {
-    if(d->contenido == NULL)
-    {
-        cout<<"Directorio Vacio"<<endl;
-        return ERROR;
-    }
+    if(esVacio(d->contenido))
+        cout << "Directorio Vacio\n" << endl;
+
     else
     {
+        cout << "Nombre\t\t\tTipo\t\tTamanio\tLineas\n";
         muestroArchivos(d->contenido);
-        cout<<endl;
     }
     return OK;
 }
 
-TipoRet CREATE(Directorio d, string nombre_archivo)
+TipoRet CREATE(Directorio &d, string nombre_archivo)
 {
     int posicion = 0;
     if(nombre_archivo.length() < LARGONOMBRE)
@@ -26,14 +24,27 @@ TipoRet CREATE(Directorio d, string nombre_archivo)
         }
         else
         {
-            d = CrearArchivo(d,nombre_archivo);
-            return OK;
+            if(esVacio(d->contenido))
+            {
+                d = CrearArchivo(d,nombre_archivo);
+                return OK;
+            }
+            if(buscoArchivo(d->contenido,nombre_archivo)->nombreArchivo==nombre_archivo)
+            {
+                return ERROR;
+            }
+            else
+            {
+                d = CrearArchivo(d,nombre_archivo);
+                return OK;
+            }
+
         }
     }
     else return ERROR;
 }
 
-TipoRet IF(Directorio d, string nombreArchivo, string texto)
+TipoRet IF(Directorio &d, string nombreArchivo, string texto)
 {
     if(esVacio(d->contenido))
     {
@@ -85,24 +96,41 @@ TipoRet TYPE(Directorio d, string nombre_Archivo)
     {
         return ERROR;
     }
-    else if(aux->contenido[0]==NULL)
-        cout<<"Archivo vacio"<<endl;
-
     else
     {
-        int x=0;
-        while(aux->contenido[x]!=NULL)
+        if(aux->contenido[0]==NULL)
         {
-            cout<<aux->contenido[x]<<endl;
-            x++;
+            cout<<"Archivo vacio"<<endl;
         }
+        else
+        {
+            int x=0;
+            while(aux->contenido[x]!=NULL)
+            {
+                cout<<aux->contenido[x]<<endl;
+                x++;
+            }
+        }
+        return OK;
     }
-    return OK;
 }
 
-TipoRet MKDIR()
+TipoRet MKDIR(Directorio &d, string nombre_directorio)
 {
-    return NO_IMPLEMENTADO;
+    int ocurrencia = count(nombre_directorio.begin(), nombre_directorio.end(), '/');
+    if(ocurrencia == 0){
+        /// Necesitaremos de PWD() para que nos diga la ruta y el padre
+    }else if(ocurrencia == 1){
+        d = CrearDirectorio(d,"/",nombre_directorio);
+    }else{
+        int posicion = nombre_directorio.find_last_of('/');
+        string path = nombre_directorio.substr(0,posicion);
+        int posicion2 = path.find_last_of('/');
+        string padre = path.substr(posicion2 + 1);
+        //d = CrearDirectorio(d,padre,nombre_directorio);
+        cout << padre;
+    }
+    return OK;
 }
 
 TipoRet CD()
@@ -110,8 +138,8 @@ TipoRet CD()
     return NO_IMPLEMENTADO;
 }
 
-//tipo2
-TipoRet DELETE(Directorio d, string palabra)
+/// TIPO 2
+TipoRet DELETE(Directorio &d, string palabra)
 {
     Archivo aux = d->contenido;
     while(!esVacio(aux))
@@ -119,15 +147,30 @@ TipoRet DELETE(Directorio d, string palabra)
         if(aux->nombreArchivo.compare(palabra) == 0)
         {
             cout << palabra << endl;
+            //
+            if(!hojaArch(aux))
+            {
+                ///desenganchar y enganchar todo;
+            }
             d = eliminarArchivo(d,palabra);
             return OK;
         }
-        aux = aux->ptrsig;
+        else
+        {
+            if(palabra<aux->nombreArchivo)
+            {
+                aux=aux->archizq;
+            }
+            else
+            {
+                aux=aux->archder;
+            }
+        }
     }
     return ERROR;
 }
 
-TipoRet BF(Directorio d, string nombreArchivo, int linea)
+TipoRet BF(Directorio &d, string nombreArchivo, int linea)
 {
     if(esVacio(d->contenido))
     {
@@ -197,7 +240,7 @@ TipoRet BF(Directorio d, string nombreArchivo, int linea)
 
 }
 
-TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
+TipoRet CAT(Directorio &d, string nombreArchivo1, string nombreArchivo2)
 {
     /*if(nombreArchivo1 == nombreArchivo2) return ERROR;
     bool flag1 = false, flag2 = false; ///Ver la cantidad de lineas y que no se pasen entre los archivos
@@ -216,17 +259,24 @@ TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
     return NO_IMPLEMENTADO;
 }
 
-TipoRet PWD()
+TipoRet PWD(Directorio d)
 {
-    return NO_IMPLEMENTADO;
+    if(esVacio2(d))
+        cout << "Directorio Vacio" << endl;
+
+    else
+        muestroDirectorios(d);
+
+    return OK;
 }
+
 TipoRet RMDIR()
 {
     return NO_IMPLEMENTADO;
 }
 
-//opcionales
-TipoRet IC(Directorio d, string nombreArchivo, string texto)
+/// OPCIONALES
+TipoRet IC(Directorio &d, string nombreArchivo, string texto)
 {
     if(esVacio(d->contenido))
     {
@@ -278,7 +328,7 @@ TipoRet IC(Directorio d, string nombreArchivo, string texto)
     }
 }
 
-TipoRet BC(Directorio d,string nombreArchivo, int linea)
+TipoRet BC(Directorio &d,string nombreArchivo, int linea)
 {
     if(esVacio(d->contenido))
     {
@@ -364,12 +414,13 @@ TipoRet DIR_S()
 {
     return NO_IMPLEMENTADO;
 }
+
 TipoRet COPY()
 {
     return NO_IMPLEMENTADO;
 }
 
-//otras
+/// OTRAS
 void MuestroRetorno(TipoRet ret)
 {
     switch(ret)
@@ -409,39 +460,52 @@ bool hayComillas(string texto)
 
 Directorio CrearArchivo(Directorio d, string nombre)
 {
-
+    Archivo nuevoArchivo = new _archivo;
+    nuevoArchivo->nombreArchivo = nombre;
+    for(int x = 0; x < LARGO_MAX; x++)
+    {
+        nuevoArchivo->contenido[x] = NULL;
+    }
+    nuevoArchivo->archder=NULL;
+    nuevoArchivo->archizq=NULL;
     if(esVacio(d->contenido))
     {
-        Archivo nuevoArchivo = new _archivo;
-        nuevoArchivo->nombreArchivo = nombre;
-        nuevoArchivo->archizq = NULL;
-        nuevoArchivo->archder = NULL;
-        d->contenido = nuevoArchivo;
-        for(int x = 0; x < LARGO_MAX; x++)
-        {
-            d->contenido->contenido[x] = NULL;
-        }
+        d->contenido=nuevoArchivo;
     }
-    ///ORDEN ALFABETICO
     else
     {
-        Archivo aux = buscoArchivo(d->contenido,nombre);
-        if(aux->nombreArchivo == nombre)
-            cout << "Ya existe";
-        else{
-            Archivo nuevoArchivo = new _archivo;
-            nuevoArchivo->nombreArchivo = nombre;
-            nuevoArchivo->archizq = NULL;
-            nuevoArchivo->archder = NULL;
-
-            for(int x = 0; x < LARGO_MAX; x++)
-                nuevoArchivo->contenido[x] = NULL;
-            if(nuevoArchivo->nombreArchivo<aux->nombreArchivo)
-                aux->archizq=nuevoArchivo;
-            else
-                aux->archder=nuevoArchivo;
+        Archivo aux=buscoArchivo(d->contenido,nombre);
+        if(aux->nombreArchivo>nombre)
+        {
+            aux->archizq=nuevoArchivo;
+        }
+        else
+        {
+            aux->archder=nuevoArchivo;
         }
     }
+    return d;
+}
+
+Directorio CrearDirectorio(Directorio d, string padre, string nombre)
+{
+    //if (esVacio2(d)){
+        Directorio nuevoDirectorio = new _directorio;
+        nuevoDirectorio->nom = nombre;
+        nuevoDirectorio->contenido = NULL;
+        nuevoDirectorio->hijo = NULL;
+        nuevoDirectorio->padre = buscoDirectorio(d, padre);
+        buscoDirectorio(d, padre)->hijo = nuevoDirectorio;
+    //}
+
+    /*else if (valor > ValorNodo(A)){
+        insertaNodoArbol(A->hermano, valorPadre, valor);
+    }
+    else{
+        cout <<  "Directorio ya existe\n" ;
+        cin.get();
+    }*/
+
     return d;
 }
 
@@ -492,10 +556,10 @@ bool esVacio(Archivo a)
     else return false;
 }
 
-bool esVacioDir(Directorio d)
+bool esVacio2(Directorio d)
 {
     if(d == NULL) return true;
-        else return false;
+    else return false;
 }
 
 Archivo buscoArchivo(Archivo a, string nom)
@@ -538,44 +602,39 @@ Archivo buscoArchivo(Archivo a, string nom)
     }
 }
 
-Directorio buscoDirectortio(Directorio d, string nom)
+Directorio buscoDirectorio(Directorio d, string nom)
 {
     if(d->nom == nom)
-    {
         return d;
+
+    else if(hojaDir(d))
+        return d;
+
+    else if(nom < d->nom)
+    {
+        if(esVacio2(d->hermanoizq))
+            return d;
+        else
+            return buscoDirectorio(d->hermanoizq,nom);
     }
     else
     {
-        if(hojaDir(d))
-        {
+        if(esVacio2(d->hermanoder))
             return d;
-        }
         else
-        {
-            if(nom<d->nom)
-            {
-                if(esVacioDir(d->dirizq))
-                {
-                    return d;
-                }
-                else
-                {
-                    return buscoDirectortio(d->dirizq,nom);
-                }
-            }
-            else
-            {
-                if(esVacioDir(d->dirder))
-                {
-                    return d;
-                }
-                else
-                {
-                    return buscoDirectortio(d->dirder,nom);
-                }
-            }
-        }
+            return buscoDirectorio(d->hermanoder,nom);
     }
+    return d;
+}
+
+Directorio buscoDirectorio(Directorio d, string nombre)
+{
+    if (esVacio2(d))
+        return NULL;
+    if (d->nom == nombre)
+        return d;
+    return buscoDirectorio(d->hijo, nombre);
+    return buscoDirectorio(d->hermano, nombre);
 }
 
 bool hojaArch(Archivo a)
@@ -590,9 +649,9 @@ bool hojaArch(Archivo a)
     }
 }
 
-bool hojaDir(Directorio d)
+/*bool hojaDir(Directorio d)
 {
-    if((esVacioDir(d->dirizq))&&(esVacioDir(d->dirder)))
+    if((esVacio2(d->hermanoder))&&(esVacio2(d->hermanoizq)))
     {
         return true;
     }
@@ -600,25 +659,32 @@ bool hojaDir(Directorio d)
     {
         return false;
     }
-}
+}*/
 
 void muestroArchivos(Archivo a)
 {
     if(!esVacio(a))
     {
         muestroArchivos(a->archizq);
-        cout<<a->nombreArchivo<<"     Archivo     "<<tamanio(a)<<endl;
+        cout << a->nombreArchivo;
+        if(a->nombreArchivo.length() <= 7) cout << "\t";
+        if(a->nombreArchivo.length() <= 13) cout << "\t";
+        cout << "\tArchivo \t" << tamanio(a) << "\t" << a->lineas << endl;
         muestroArchivos(a->archder);
     }
 }
 
 void muestroDirectorios(Directorio d)
 {
-    if(!esVacioDir(d))
-    {
-        muestroDirectorios(d->dirizq);
-        cout<<d->nom<<"     Directorio"<<endl;
-        muestroDirectorios(d->dirder);
+
+    if(!esVacio2(d)){
+        cout << d->nom << "\nDirectorio" << endl;
+    }
+    if(!esVacio2(d->hijo)){
+        muestroDirectorios(d->hijo);
+    }
+    if(!esVacio2(d->hermano)){
+        muestroDirectorios(d->hermano);
     }
 }
 
@@ -627,7 +693,7 @@ void muestroTodo(Directorio raiz)
     ///queda para despues
 }
 
-void cargarDatosDePrueba(Directorio d)
+void cargarDatosDePrueba(Directorio &d)
 {
     string a;
     a = (char)34;
