@@ -215,10 +215,25 @@ TipoRet CAT(Directorio &d, string nombreArchivo1, string nombreArchivo2)
 }
 
 
-TipoRet PWD()
+TipoRet PWD(Directorio d, string nombreDirectorio)
 {
-    return NO_IMPLEMENTADO;
+    string ruta;
+    if(d->nom!="/"){
+      Directorio aux=d;
+      ruta="/"+nombreDirectorio;
+      while(!esVacio2(aux->padre)){
+        aux=aux->padre;
+        if(aux->nom!="/"){
+          ruta="/"+aux->nom+ruta;
+                         }
+                                  }
+                   }else{
+                      ruta="/";
+                        }
+    cout<<ruta<<endl;
+    return OK;
 }
+
 TipoRet RMDIR()
 {
     return NO_IMPLEMENTADO;
