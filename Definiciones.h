@@ -33,7 +33,7 @@ TipoRet CREATE(Directorio &d, std::string nombre_archivo);
 TipoRet IF(Directorio &d, std::string nombreArchivo, std::string texto);
 TipoRet TYPE(Directorio d, std::string nombreArchivo);
 TipoRet MKDIR(Directorio &d, std::string nombre_archivo);
-TipoRet CD();
+TipoRet CD(Directorio d, string ruta);
 
 /// tipo2
 TipoRet DELETE(Directorio &d, std::string palabra);
@@ -59,11 +59,14 @@ Directorio eliminarArchivo(Directorio d, std::string nombre);
 bool esVacio(Archivo a);
 bool esVacio2(Directorio d);
 Archivo buscoArchivo(Archivo a, string nom);
-Directorio buscoDirectorio(Directorio d, string nombre);
+Directorio buscoDirectorioHermano(Directorio d, string nombre);
+Directorio buscoDirectorioHijo(Directorio d, string nombre);
 bool hojaArch(Archivo a);
 bool hojaDir(Directorio d);
 void muestroArchivos(Archivo a);
 void muestroDirectorios(Directorio d);
 void muestroTodo(Directorio raiz);
 void cargarDatosDePrueba(Directorio &d);
+Directorio recorrida(Directorio d, string texto);
+string Recortador(string ruta);
 #endif // DEFINICIONES_H_INCLUDED
