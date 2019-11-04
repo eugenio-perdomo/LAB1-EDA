@@ -573,3 +573,31 @@ void cargarDatosDePrueba(Directorio &d)
     IC(d,"Led_Zeppelin.mp3",a+"Inmigrant Song"+a);
     IC(d,"Led_Zeppelin.mp3",a+"Black Dog"+a);
 }
+
+Directorio recorrida(Directorio d, string texto)
+{
+    Directorio aux=d;
+    string ruta;
+    int pos=texto.find_last_of('/');
+    int posf;
+    if(texto.find('/')==0){
+      if(aux->nom.find('/')!=0){
+        while(!esVacio2(aux->padre)){
+          aux=aux->padre;
+                                    }
+                               }
+      ruta=texto.substr(1,pos);
+                         }else{
+                            ruta=texto.substr(0,pos);
+                              }
+    posf=ruta.find_last_of('/');
+    while(posf!=-1){
+      pos=ruta.find('/');
+      aux=buscoDirectorio(aux,ruta.substr(0,pos));
+      posf=ruta.find_last_of('/');
+      if(posf!=-1){
+        ruta=ruta.substr(pos+1,posf);
+                  }
+                   }
+    return aux;
+}
