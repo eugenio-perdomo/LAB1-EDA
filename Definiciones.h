@@ -41,8 +41,8 @@ TipoRet CD();
 TipoRet DELETE(Directorio &d, std::string palabra);
 TipoRet BF(Directorio &d,string nombreArchivo, int linea);
 TipoRet CAT();
+TipoRet PWD(Directorio d, string nombreDirectorio);
 
-TipoRet PWD();
 TipoRet RMDIR();
 
 
