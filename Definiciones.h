@@ -72,5 +72,5 @@ bool hojaDir(Directorio d);
 void muestroArchivos(Archivo a);
 void muestroDirectorios(Directorio d);
 void muestroTodo(Directorio raiz);
-
 void cargarDatosDePrueba(Directorio &d);
+Directorio recorrida(Directorio d, string texto)
