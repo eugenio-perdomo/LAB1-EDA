@@ -699,19 +699,21 @@ Directorio recorrida(Directorio d, string texto)
     int pos2=texto.find_last_of('/');
     Directorio aux=d;
     if(texto.find('/')==0){
-      ruta=texto.substr(1,pos2);
+      ruta=texto.substr(1,pos);
+      txt2=texto.substr(1,texto.find_last_of('/')-1);
                           }else{
-                             ruta=texto.substr(0,pos2);
+                             ruta=texto.substr(0,pos);
+                             txt2=texto.substr(0,texto.find_last_of('/'));
                                }
-    while(pos>0){
+    while(pos>-1){
       aux=buscoDirectorio(aux,ruta);
-      txt2=texto.substr(pos+1,-1);
-      pos=texto.find('/');
-      pos2=texto.find_last_of('/');
-      if(pos>0){
-        ruta=texto.substr(pos,pos2);
-               }
+      pos=txt2.find('/');
+      if(pos>-1){
+        ruta=txt2.substr(0,pos);
+        txt2=txt2.substr(pos+1,-1);
                 }
+                 }
+
     return aux;
 }
 
