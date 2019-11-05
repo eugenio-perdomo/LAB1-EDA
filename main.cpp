@@ -21,9 +21,18 @@ int main()
     int espacio = 0,pos = 0;
     Directorio d = NULL;
     d = new _directorio;
-    d->nom = "Directorio1";
+    d->nom = "/";
     d->hijo = NULL;
+    d->hermano = NULL;
     d->contenido = NULL;
+    getchar();
+    d = cargarDirectoriosDePrueba(d);
+    muestroDirectorios(d->hijo);
+
+
+    cout<<"hola" << endl;
+    d = recorrida(d->hijo, "/asd/asd");
+
     cargarDatosDePrueba(d);
     bool flag = true;
     while(flag == true)
@@ -84,6 +93,14 @@ int main()
 
         if(tipo.compare("FIN") == 0)
             flag = false;
+
+        if(tipo.compare("CD") == 0)
+        {
+            espacio = subComando.find(' ');
+            texto = subComando.substr(espacio + 1);
+            subComando = subComando.substr(0,espacio);
+            MuestroRetorno(CD(d,subComando));
+        }
 
     }
     return 0;
