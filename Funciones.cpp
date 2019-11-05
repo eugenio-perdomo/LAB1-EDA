@@ -696,7 +696,6 @@ Directorio recorrida(Directorio d, string texto)
 {
     string ruta,txt2;
     int pos=texto.find('/');
-    int pos2=texto.find_last_of('/');
     Directorio aux=d;
     if(texto.find('/')==0){
       ruta=texto.substr(1,pos);
@@ -705,14 +704,17 @@ Directorio recorrida(Directorio d, string texto)
                              ruta=texto.substr(0,pos);
                              txt2=texto.substr(0,texto.find_last_of('/'));
                                }
-    while(pos>-1){
+    do{
       aux=buscoDirectorio(aux,ruta);
-      pos=txt2.find('/');
-      if(pos>-1){
-        ruta=txt2.substr(0,pos);
-        txt2=txt2.substr(pos+1,-1);
-                }
-                 }
+      if(!esVacio2(aux)){
+        aux=aux->hijo;
+        pos=txt2.find('/');
+        if(pos>-1){
+          ruta=txt2.substr(0,pos);
+          txt2=txt2.substr(pos+1,-1);
+                  }
+                        }
+      }while(pos>-1);
 
     return aux;
 }
