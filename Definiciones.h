@@ -18,7 +18,7 @@ typedef struct _archivo
     _archivo *archder;
 }*Archivo;
 
-typedef struct _directorio
+typedef struct _directorio      //  /   Dir1  -> Dir11  -> Dir12 ---  Dir2 -> Dir21  -> Dir22
 {
     std::string nom;
     Archivo contenido;
@@ -66,7 +66,9 @@ bool hojaDir(Directorio d);
 void muestroArchivos(Archivo a);
 void muestroDirectorios(Directorio d);
 void muestroTodo(Directorio raiz);
-void cargarDatosDePrueba(Directorio &d);
+void cargarDatosDePrueba(Directorio d);
 Directorio recorrida(Directorio d, string texto);
-string Recortador(string ruta);
+
+Directorio cargarDirectoriosDePrueba(Directorio d);
+Directorio buscoDirectorio(Directorio d, string nombre);
 #endif // DEFINICIONES_H_INCLUDED
