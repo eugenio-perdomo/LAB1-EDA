@@ -7,7 +7,7 @@ Directorio CreoDirectorio(Directorio d)
     d->hijo = NULL;
     d->hermano = NULL;
     d->contenido = NULL;
-    d->padre=d;
+    //d->padre=d;
 
     return d;
 }
@@ -549,7 +549,10 @@ Directorio CrearDirectorio(Directorio d, string padre, string nombre)
     {
         if(!esVacio2(d))
         {
+            cout << "aqui" << endl;
             Directoriopadre=buscoDirectorio(root,padre);
+            //cout << Directoriopadre->nom;
+
             if(!esVacio2(Directoriopadre))
             {
                 nuevoDirectorio=new _directorio;
@@ -573,7 +576,7 @@ Directorio CrearDirectorio(Directorio d, string padre, string nombre)
             }
             else
             {
-                cout << "Directorio padre no encontrado" << padre << endl;
+                cout << "Directorio padre no encontrado" << endl;
             }
         }
         else
@@ -687,13 +690,18 @@ Directorio buscoDirectorioHermano(Directorio d, string nombre)
 }
 Directorio buscoDirectorio(Directorio d, string nombre)
 {
-    if (esVacio2(d->padre))
+    if (esVacio2(d))
+    {
+        cout << d->nom;
         return NULL;
+    }
     if (d->nom == nombre)
-        return d-;
+    {
+        cout << d->nom;
+        return d;
+    }
     return buscoDirectorio(d->hermano, nombre);
 }
-
 Directorio buscoDirectorioHijo(Directorio d, string nombre)
 {
     if (esVacio2(d))
