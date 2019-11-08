@@ -1,4 +1,6 @@
+
 /// TIPO 1
+string rutaActual= "/";
 TipoRet DIR(Directorio d)
 {
     if(esVacio(d->contenido))
@@ -9,7 +11,7 @@ TipoRet DIR(Directorio d)
         cout << "Nombre\t\t\tTipo\t\tTamanio\tLineas\n";
         muestroArchivos(d->contenido);
         cout<<endl;
-        muestroDirectorios(d);
+        muestroDirectorios(d->hijo);
     }
     return OK;
 }
@@ -120,23 +122,59 @@ TipoRet TYPE(Directorio d, string nombre_Archivo)
 TipoRet MKDIR(Directorio &d, string nombre_directorio)
 {
     int ocurrencia = count(nombre_directorio.begin(), nombre_directorio.end(), '/');
+
+
+
     if(ocurrencia == 0){
-        /// Necesitaremos de PWD() para que nos diga la ruta y el padre
-    }else if(ocurrencia == 1){
+        /// donde estamos parados
+    }
+
+
+
+    else if(ocurrencia == 1){
         d = CrearDirectorio(d,"/",nombre_directorio);
-    }else{
+    }
+
+
+
+    else{
         int posicion = nombre_directorio.find_last_of('/');
         string path = nombre_directorio.substr(0,posicion);
         int posicion2 = path.find_last_of('/');
         string padre = path.substr(posicion2 + 1);
-        //d = CrearDirectorio(d,padre,nombre_directorio);
-        cout << padre;
+        nombre_directorio=nombre_directorio.substr(posicion+1);
+        d = CrearDirectorio(d,padre,nombre_directorio);
     }
     return OK;
 }
 
-TipoRet CD()
+TipoRet CD(Directorio &d, string ruta)
 {
+    cout<<"entramos "<<endl;
+    if(ruta=="/"){
+      while(!esVacio2(d->padre)){
+        d=d->padre;
+                                }
+      cout<<"raiz nombre: "<<d->nom<<endl;
+                 }else{
+                    d=recorrida(d,ruta);
+                    cout<<"locacion: "<<d->nom<<endl;
+                      }
+
+    /*string delimeter = "/";
+    size_t pos = 0;
+    string nombreDirectorio;
+
+    if(ruta.find('/') == 0)
+        ruta = ruta.substr(1);
+
+    while ((pos = ruta.find(delimeter)) != std::string::npos) {
+        nombreDirectorio = ruta.substr(0, pos);
+        cout << nombreDirectorio << endl;
+        ruta.erase(0, pos + delimeter.length());
+    }
+
+    cout << ruta << endl;*/
     return NO_IMPLEMENTADO;
 }
 
@@ -149,7 +187,7 @@ TipoRet DELETE(Directorio &d, string palabra)
         if(aux->nombreArchivo.compare(palabra) == 0)
         {
             cout << palabra << endl;
-            //
+
             if(!hojaArch(aux))
             {
                 ///desenganchar y enganchar todo;
@@ -261,12 +299,12 @@ TipoRet CAT(Directorio &d, string nombreArchivo1, string nombreArchivo2)
     return NO_IMPLEMENTADO;
 }
 
-TipoRet PWD(Directorio d, string nombreDirectorio)
+TipoRet PWD(Directorio d)
 {
-    string ruta;
+    string ruta="/";
     if(d->nom!="/"){
       Directorio aux=d;
-      ruta="/"+nombreDirectorio;
+      ruta=ruta+aux->nom;
       while(!esVacio2(aux->padre)){
         aux=aux->padre;
         if(aux->nom!="/"){
@@ -499,23 +537,12 @@ Directorio CrearArchivo(Directorio d, string nombre)
 
 Directorio CrearDirectorio(Directorio d, string padre, string nombre)
 {
-    //if (esVacio2(d)){
-        Directorio nuevoDirectorio = new _directorio;
-        nuevoDirectorio->nom = nombre;
-        nuevoDirectorio->contenido = NULL;
-        nuevoDirectorio->hijo = NULL;
-        nuevoDirectorio->padre = buscoDirectorio(d, padre);
-        buscoDirectorio(d, padre)->hijo = nuevoDirectorio;
-    //}
-
-    /*else if (valor > ValorNodo(A)){
-        insertaNodoArbol(A->hermano, valorPadre, valor);
-    }
-    else{
-        cout <<  "Directorio ya existe\n" ;
-        cin.get();
-    }*/
-
+    Directorio nuevoDirectorio = new _directorio;
+    nuevoDirectorio->nom = nombre;
+    nuevoDirectorio->contenido = NULL;
+    nuevoDirectorio->hijo = NULL;
+    nuevoDirectorio->padre = buscoDirectorioHermano(d, padre);
+    buscoDirectorioHermano(d, padre)->hijo = nuevoDirectorio;
     return d;
 }
 
@@ -558,8 +585,7 @@ Directorio eliminarArchivo(Directorio d, string nombre)
     }
     return d;
 }
-/*Concatenacion(){
-}*/
+
 bool esVacio(Archivo a)
 {
     if(a == NULL) return true;
@@ -612,13 +638,22 @@ Archivo buscoArchivo(Archivo a, string nom)
     }
 }
 
-Directorio buscoDirectorio(Directorio d, string nombre)
+Directorio buscoDirectorioHermano(Directorio d, string nombre)
 {
     if (esVacio2(d))
         return NULL;
     if (d->nom == nombre)
         return d;
-    return buscoDirectorio(d->hermano, nombre);
+    return buscoDirectorioHermano(d->hermano, nombre);
+}
+
+Directorio buscoDirectorioHijo(Directorio d, string nombre)
+{
+    if (esVacio2(d))
+        return NULL;
+    if (d->nom == nombre)
+        return d;
+    return buscoDirectorioHijo(d->hijo, nombre);
 }
 
 bool hojaArch(Archivo a)
@@ -632,18 +667,6 @@ bool hojaArch(Archivo a)
         return false;
     }
 }
-
-/*bool hojaDir(Directorio d)
-{
-    if((esVacio2(d->hermanoder))&&(esVacio2(d->hermanoizq)))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}*/
 
 void muestroArchivos(Archivo a)
 {
@@ -660,12 +683,10 @@ void muestroArchivos(Archivo a)
 
 void muestroDirectorios(Directorio d)
 {
-    if(!esVacio2(d->hijo)){
-      Directorio aux=d->hijo;
-      while(!esVacio2(aux)){
-        cout<<aux->nom<<"     Directorio"<<endl;
-                           }
-                          }
+    if(!esVacio2(d)){
+      cout<<d->nom<<"     Directorio"<<endl;
+      muestroDirectorios(d->hermano);
+                    }
 }
 
 void muestroTodo(Directorio raiz)
@@ -694,28 +715,74 @@ void cargarDatosDePrueba(Directorio &d)
 
 Directorio recorrida(Directorio d, string texto)
 {
-    string ruta,txt2;
+    cout<<"recorriendo"<<endl;
+    string ruta,txt2,destino;
     int pos=texto.find('/');
-    Directorio aux=d;
-    if(texto.find('/')==0){
-      ruta=texto.substr(1,pos);
+    cout<<"pos: "<<pos<<endl;
+    destino=texto.substr(texto.find_last_of('/')+1,-1);
+    cout<<"destino: "<<destino<<endl;
+    Directorio aux=d->hijo;
+    if(pos==0){
+      //ir a la raiz
       txt2=texto.substr(1,texto.find_last_of('/')-1);
+      cout<<"txt2: "<<txt2<<endl;
+      pos=txt2.find('/');
+      ruta=txt2.substr(0,pos);
+      txt2=texto.substr(pos+2,texto.find_last_of('/')-1);
                           }else{
+                             //busca
                              ruta=texto.substr(0,pos);
                              txt2=texto.substr(0,texto.find_last_of('/'));
                                }
-    do{
-      aux=buscoDirectorio(aux,ruta);
-      if(!esVacio2(aux)){
-        aux=aux->hijo;
-        pos=txt2.find('/');
-        if(pos>-1){
-          ruta=txt2.substr(0,pos);
-          txt2=txt2.substr(pos+1,-1);
-                  }
-                        }
-      }while(pos>-1);
+    cout<<"pos: "<<pos<<"   ruta: "<<ruta<<"  txt2: "<<txt2<<endl;
+
+
+    string delimeter = "/";
+    size_t pos2 = 0;
+    string nombreDirectorio;
+
+    if(txt2.find('/') == 0)
+        txt2 = txt2.substr(1);
+
+    while ((pos2 = txt2.find(delimeter)) != std::string::npos) {
+        nombreDirectorio = txt2.substr(0, pos2);
+        cout << nombreDirectorio << endl;
+        txt2.erase(0, pos2 + delimeter.length());
+    }
+
+    cout << txt2 << endl;
 
     return aux;
+}
+
+Directorio cargarDirectoriosDePrueba(Directorio d){
+    Directorio a = NULL;
+    a = new _directorio;
+    a->nom = "qwe";
+    a->hijo = NULL;
+    a->hermano = NULL;
+    a->contenido = NULL;
+
+    Directorio c = NULL;
+    c = new _directorio;
+    c->nom = "asd";
+    c->hijo = NULL;
+    c->hermano = NULL;
+    c->contenido = NULL;
+
+    Directorio b = NULL;
+    b = new _directorio;
+    b->nom = "zxc";
+    b->hijo = NULL;
+    b->hermano = NULL;
+    b->contenido = NULL;
+
+    d->hijo = a;
+    a->padre=d;
+    a->hermano = c;
+    c->padre=d;
+    c->hijo = b;
+    b->padre=c;
+    return d;
 }
 
