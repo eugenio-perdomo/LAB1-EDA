@@ -67,4 +67,5 @@ void muestroDirectorios(Directorio d);
 void muestroTodo(Directorio raiz);
 Directorio recorrida(Directorio d, string texto);
 void cargarDatosDePrueba(Directorio &d);
+Directorio irAraiz(Directorio d);
 #endif // DEFINICIONES_H_INCLUDED
