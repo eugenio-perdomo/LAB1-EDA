@@ -150,7 +150,7 @@ TipoRet MKDIR(Directorio &d, string nombre_directorio)
 
 TipoRet CD(Directorio &d, string ruta)
 {
-    cout<<"entramos "<<endl;
+    //cout<<"entramos "<<endl;
     if(ruta=="/"){
       while(!esVacio2(d->padre)){
         d=d->padre;
@@ -158,24 +158,26 @@ TipoRet CD(Directorio &d, string ruta)
       cout<<"raiz nombre: "<<d->nom<<endl;
                  }else{
                     d=recorrida(d,ruta);
-                    cout<<"locacion: "<<d->nom<<endl;
+                    //cout<<"locacion: "<<d->nom<<endl;
                       }
+    if(esVacio2(d)){
+      return ERROR;
+                   }else{
+                      return OK;
+                        }
 
     /*string delimeter = "/";
     size_t pos = 0;
     string nombreDirectorio;
-
     if(ruta.find('/') == 0)
         ruta = ruta.substr(1);
-
     while ((pos = ruta.find(delimeter)) != std::string::npos) {
         nombreDirectorio = ruta.substr(0, pos);
         cout << nombreDirectorio << endl;
         ruta.erase(0, pos + delimeter.length());
     }
-
     cout << ruta << endl;*/
-    return NO_IMPLEMENTADO;
+    //return NO_IMPLEMENTADO;
 }
 
 /// TIPO 2
@@ -723,18 +725,21 @@ Directorio recorrida(Directorio d, string texto)
     cout<<"destino: "<<destino<<endl;
     Directorio aux=d->hijo;
     if(pos==0){
-      //ir a la raiz
+      while(!esVacio2(aux->padre)){
+        aux=aux->padre;
+                                  }
       txt2=texto.substr(1,texto.find_last_of('/')-1);
       cout<<"txt2: "<<txt2<<endl;
       pos=txt2.find('/');
       ruta=txt2.substr(0,pos);
+      aux=buscoDirectorioHermano(aux->hijo,ruta);
       txt2=texto.substr(pos+2,texto.find_last_of('/')-1);
                           }else{
-                             //busca
                              ruta=texto.substr(0,pos);
+                             aux=buscoDirectorioHermano(aux,ruta);
                              txt2=texto.substr(0,texto.find_last_of('/'));
                                }
-    cout<<"pos: "<<pos<<"   ruta: "<<ruta<<"  txt2: "<<txt2<<endl;
+    //cout<<"pos: "<<pos<<"   ruta: "<<ruta<<"  txt2: "<<txt2<<endl;
 
 
     string delimeter = "/";
@@ -744,13 +749,13 @@ Directorio recorrida(Directorio d, string texto)
     if(txt2.find('/') == 0)
         txt2 = txt2.substr(1);
 
-    while ((pos2 = txt2.find(delimeter)) != std::string::npos) {
+    while (((pos2 = txt2.find(delimeter)) != std::string::npos)&&(!esVacio2(aux))) {
         nombreDirectorio = txt2.substr(0, pos2);
-        cout << nombreDirectorio << endl;
+        aux=buscoDirectorioHermano(aux->hijo,nombreDirectorio);
         txt2.erase(0, pos2 + delimeter.length());
     }
 
-    cout << txt2 << endl;
+    //cout << txt2 << endl;
 
     return aux;
 }
@@ -785,4 +790,30 @@ Directorio cargarDirectoriosDePrueba(Directorio d){
     b->padre=c;
     return d;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
