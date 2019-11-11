@@ -150,20 +150,14 @@ TipoRet MKDIR(Directorio &d, string nombre_directorio)
 
 TipoRet CD(Directorio &d, string ruta)
 {
-    if(ruta=="/"){
-      while(!esVacio2(d->padre)){
-        d=d->padre;
-                                  }
-      return OK;
-                 }else{
-                    Directorio aux=d;
-                    aux=recorrida(aux,ruta);
-                    if(esVacio2(aux)){
-                      return ERROR;
-                                     }else{
-                                        return OK;
-                                          }
-                      }
+    Directorio aux=d;
+    aux=recorrida(aux,ruta);
+    if(esVacio2(aux)){
+      return ERROR;
+                     }else{
+                        d=aux;
+                        return OK;
+                          }
 }
 
 /// TIPO 2
@@ -628,11 +622,15 @@ Archivo buscoArchivo(Archivo a, string nom)
 
 Directorio buscoDirectorioHermano(Directorio d, string nombre)
 {
-    if (esVacio2(d))
+    if(esVacio2(d)){
         return NULL;
-    if (d->nom == nombre)
-        return d;
-    return buscoDirectorioHermano(d->hermano, nombre);
+                   }else{
+                      if(d->nom == nombre){
+                        return d;
+                                          }else{
+                                             return buscoDirectorioHermano(d->hermano, nombre);
+                                               }
+                        }
 }
 
 Directorio buscoDirectorioHijo(Directorio d, string nombre)
@@ -703,8 +701,36 @@ void cargarDatosDePrueba(Directorio &d)
 
 Directorio recorrida(Directorio d, string texto)
 {
-    cout<<"recorriendo"<<endl;
-    string ruta,txt2,destino;
+    string ruta,txt2;
+    if(texto=="/"){
+      return irAraiz(d);
+                  }else{
+                     int pos=texto.find('/');
+                     if(pos==0){
+                       d=irAraiz(d);
+                       txt2=texto.substr(1);
+                       pos=txt2.find('/');
+                               }else{
+                                  txt2=texto;
+                                    }
+                     txt2=txt2.substr(pos+1);
+                     string destino=texto.substr(texto.find_last_of('/')+1);
+
+                     while(!esVacio2(d)&&(pos!=-1)){
+                     ruta=txt2.substr(0,pos);
+                     d=buscoDirectorioHermano(d->hijo,ruta);
+                     pos=txt2.find('/');
+                     if(pos!=-1){
+                       txt2=txt2.substr(pos+1);
+                                }
+
+                                         }
+                     if(!esVacio2(d)){
+                       d=buscoDirectorioHermano(d->hijo,destino);
+                                     }
+                     return d;
+                       }
+    /*string ruta,txt2,destino;
     int pos=texto.find('/');
     if(pos==0){
       while(!esVacio2(d->padre)){
@@ -744,7 +770,7 @@ Directorio recorrida(Directorio d, string texto)
 
     //cout << txt2 << endl;
 
-    return d;
+    */
 }
 
 Directorio cargarDirectoriosDePrueba(Directorio d){
@@ -779,6 +805,18 @@ Directorio cargarDirectoriosDePrueba(Directorio d){
     cargarDatosDePrueba(b);
 
     return d;
+}
+
+Directorio irAraiz(Directorio d)
+{
+    while(!esVacio2(d->padre)){
+      d=d->padre;
+                              }
+    return d;
+    /*if(!esVacio2(d)){
+      cout<<d->nom<<" ";
+      return irAraiz(d->padre);
+                    }*/
 }
 
 
