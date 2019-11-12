@@ -1,28 +1,32 @@
-//tipo1
+/// TIPO 1
+string ruta = "/";
+Directorio CreoDirectorio(Directorio d)
+{
+    d = new _directorio;
+    d->nom = "/";
+    d->hijo = NULL;
+    d->hermano = NULL;
+    d->contenido = NULL;
+    d->padre = NULL;
+    return d;
+}
+
 TipoRet DIR(Directorio d)
 {
-    if(d->contenido == NULL)
-    {
-        cout<<"Directorio Vacio"<<endl;
-        return ERROR;
-    }
+    if(esVacio(d->contenido))
+        cout << "Directorio Vacio\n" << endl;
+
     else
     {
-        Archivo aux = d->contenido;
-        while(aux != NULL)
-        {
-            cout << aux->nombreArchivo << "\tArchivo \t" << tamanio(aux) << "\t" << aux->lineas << endl;
-            aux = aux->ptrsig;
-        }
-        delete aux;
-        /*muestroArchivos(d->contenido);
-        cout<<endl;
-        muestroDirectorios(d->dirsig);*/
+        cout << "Nombre\t\t\tTipo\t\tTamanio\tLineas\n";
+        muestroArchivos(d->contenido);
+        cout<<"\nSubDirectorios:\n";
+        muestroDirectorios(d->hijo);
     }
     return OK;
 }
 
-TipoRet CREATE(Directorio d, string nombre_archivo)
+TipoRet CREATE(Directorio &d, string nombre_archivo)
 {
     int posicion = 0;
     if(nombre_archivo.length() < LARGONOMBRE)
@@ -31,15 +35,30 @@ TipoRet CREATE(Directorio d, string nombre_archivo)
         if(posicion < 0)
         {
             return ERROR;
-        }else{
-        d = CrearArchivo(d,nombre_archivo);
-        return OK;
-             }
+        }
+        else
+        {
+            if(esVacio(d->contenido))
+            {
+                d = CrearArchivo(d,nombre_archivo);
+                return OK;
+            }
+            if(buscoArchivo(d->contenido,nombre_archivo)->nombreArchivo==nombre_archivo)
+            {
+                return ERROR;
+            }
+            else
+            {
+                d = CrearArchivo(d,nombre_archivo);
+                return OK;
+            }
+
+        }
     }
     else return ERROR;
 }
 
-TipoRet IF(Directorio d, string nombreArchivo, string texto)
+TipoRet IF(Directorio &d, string nombreArchivo, string texto)
 {
     if(esVacio(d->contenido))
     {
@@ -48,72 +67,114 @@ TipoRet IF(Directorio d, string nombreArchivo, string texto)
     else
     {
         Archivo aux = buscoArchivo(d->contenido,nombreArchivo);
-        if(aux->nombreArchivo==nombreArchivo){
+        if(aux->nombreArchivo==nombreArchivo)
+        {
 
-        if(!hayComillas(texto))
-        {
-            cout<<"No tiene comillas\n";
-            return ERROR;
-        }
-        else
-        {
-            if(texto.length() > TEXTO_MAX)
+            if(!hayComillas(texto))
             {
-                cout<<"Muy largo\n";
+                cout<<"No tiene comillas\n";
                 return ERROR;
             }
             else
             {
-                int x=0;
-                while(x < LARGO_MAX && aux->contenido[x] != NULL)
+                if(texto.length() > TEXTO_MAX)
                 {
-                    x++;
+                    cout<<"Muy largo\n";
+                    return ERROR;
                 }
-                aux->contenido[x] = new char[TEXTO_MAX];
-                texto.copy(aux->contenido[x],TEXTO_MAX);
-                aux->lineas++;
-                return OK;
+                else
+                {
+                    int x=0;
+                    while(x < LARGO_MAX && aux->contenido[x] != NULL)
+                    {
+                        x++;
+                    }
+                    aux->contenido[x] = new char[TEXTO_MAX];
+                    texto.copy(aux->contenido[x],TEXTO_MAX);
+                    aux->lineas++;
+                    return OK;
+                }
             }
         }
-                                             }else{
-                                                return ERROR;
-                                                  }
+        else
+        {
+            return ERROR;
+        }
     }
 }
 
 TipoRet TYPE(Directorio d, string nombre_Archivo)
 {
     Archivo aux=buscoArchivo(d->contenido,nombre_Archivo);
-    if(aux->nombreArchivo!=nombre_Archivo){
-      return ERROR;
-                                          }else{
-                                             if(aux->contenido[0]==NULL){
-                                               cout<<"Archivo vacio"<<endl;
-                                                                        }else{
-                                                                           int x=0;
-                                                                           while(aux->contenido[x]!=NULL){
-                                                                             cout<<aux->contenido[x]<<endl;
-                                                                             x++;
-                                                                                                         }
-                                                                             }
-                                             return OK;
-                                               }
+    if(aux->nombreArchivo!=nombre_Archivo)
+    {
+        return ERROR;
+    }
+    else
+    {
+        if(aux->contenido[0]==NULL)
+        {
+            cout<<"Archivo vacio"<<endl;
+        }
+        else
+        {
+            int x=0;
+            while(aux->contenido[x]!=NULL)
+            {
+                cout<<aux->contenido[x]<<endl;
+                x++;
+            }
+        }
+        return OK;
+    }
 }
 
-TipoRet MKDIR()
+TipoRet MKDIR(Directorio &d, string nombre_directorio)
 {
-    return NO_IMPLEMENTADO;
+    int ocurrencia = count(nombre_directorio.begin(), nombre_directorio.end(), '/');
+
+    if(ocurrencia == 0)
+    {
+        /// donde estamos parados
+    }
+
+    else if(ocurrencia == 1)
+    {
+        int posicion=nombre_directorio.find('/');
+        nombre_directorio=nombre_directorio.substr(posicion+1);
+        d = CrearDirectorio(d,"/",nombre_directorio);
+    }
+
+    else
+    {
+        int posicion = nombre_directorio.find_last_of('/');
+        string path = nombre_directorio.substr(0,posicion);
+        int posicion2 = path.find_last_of('/');
+        string padre = path.substr(posicion2 + 1);
+        nombre_directorio=nombre_directorio.substr(posicion+1);
+        d = CrearDirectorio(d,padre,nombre_directorio);
+    }
+    return OK;
 }
 
-TipoRet CD()
+TipoRet CD(Directorio &d, string ruta)
 {
-    return NO_IMPLEMENTADO;
+    Directorio aux=d;
+    aux=recorrida(aux,ruta);
+    if(esVacio2(aux))
+    {
+        return ERROR;
+    }
+    else
+    {
+        d=aux;
+        PWD(d);
+        return OK;
+    }
 }
 
-
-
-//tipo2
-TipoRet DELETE(Directorio d, string palabra)
+/// TIPO 2
+TipoRet DELETE(Directorio &d, string palabra)
 {
     Archivo aux = d->contenido;
     while(!esVacio(aux))
@@ -121,64 +182,100 @@ TipoRet DELETE(Directorio d, string palabra)
         if(aux->nombreArchivo.compare(palabra) == 0)
         {
             cout << palabra << endl;
+
+            if(!hojaArch(aux))
+            {
+                ///desenganchar y enganchar todo;
+            }
             d = eliminarArchivo(d,palabra);
             return OK;
         }
-        aux = aux->ptrsig;
+        else
+        {
+            if(palabra<aux->nombreArchivo)
+            {
+                aux=aux->archizq;
+            }
+            else
+            {
+                aux=aux->archder;
+            }
+        }
     }
     return ERROR;
 }
 
-TipoRet BF(Directorio d, string nombreArchivo, int linea)
+TipoRet BF(Directorio &d, string nombreArchivo, int linea)
 {
-    if(esVacio(d->contenido)){
+    if(esVacio(d->contenido))
+    {
         return ERROR;
-                             }else{
-                                if(d->contenido->nombreArchivo.compare(nombreArchivo)==0){
-                                  int x=0;
-                                  while(d->contenido->contenido[x]!=NULL){
-                                    x++;
-                                                                         }
-                                  int y;
-                                  if(x<linea){
-                                    for(y=x-1;y>-1;y--){
-                                      delete d->contenido->contenido[y];
-                                                       }
-                                             }else{
-                                                for(y=linea;y>0;y--){
-                                                  delete d->contenido->contenido[x-1];
-                                                  x--;
-                                                                    }
-                                                  }
-                                  return OK;
-                                                                                         }else{
-                                                                                            Archivo aux= buscoArchivo(d->contenido,nombreArchivo);
-                                                                                            if(aux->nombreArchivo!=nombreArchivo){
-                                                                                              return ERROR;
-                                                                                                            }else{
-                                                                                                               int x=0;
-                                                                                                               while(aux->contenido[x]!=NULL){
-                                                                                                                 x++;
-                                                                                                                                             }
-                                                                                                               int y;
-                                                                                                               if(x<linea){
-                                                                                                                 for(y=x-1;y>-1;y--){
-                                                                                                                   delete aux->contenido[y];
-                                                                                                                                    }
-                                                                                                                          }else{
-                                                                                                                             for(y=linea;y>0;y--){
-                                                                                                                                delete aux->contenido[x-1];
-                                                                                                                                x--;
-                                                                                                                                                 }
-                                                                                                                               }
-                                                                                                               return OK;
-                                                                                                                 }
-                                                                                              }
-                                  }
+    }
+    else
+    {
+        if(d->contenido->nombreArchivo.compare(nombreArchivo)==0)
+        {
+            int x=0;
+            while(d->contenido->contenido[x]!=NULL)
+            {
+                x++;
+            }
+            int y;
+            if(x<linea)
+            {
+                for(y=x-1; y>-1; y--)
+                {
+                    delete d->contenido->contenido[y];
+                }
+            }
+            else
+            {
+                for(y=linea; y>0; y--)
+                {
+                    delete d->contenido->contenido[x-1];
+                    x--;
+                }
+            }
+            return OK;
+        }
+        else
+        {
+            Archivo aux= buscoArchivo(d->contenido,nombreArchivo);
+            if(aux->nombreArchivo!=nombreArchivo)
+            {
+                return ERROR;
+            }
+            else
+            {
+                int x=0;
+                while(aux->contenido[x]!=NULL)
+                {
+                    x++;
+                }
+                int y;
+                if(x<linea)
+                {
+                    for(y=x-1; y>-1; y--)
+                    {
+                        delete aux->contenido[y];
+                    }
+                }
+                else
+                {
+                    for(y=linea; y>0; y--)
+                    {
+                        delete aux->contenido[x-1];
+                        x--;
+                    }
+                }
+                return OK;
+            }
+        }
+    }
 
 }
 
-TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
+TipoRet CAT(/*Directorio &d, string nombreArchivo1, string nombreArchivo2*/)
 {
     /*if(nombreArchivo1 == nombreArchivo2) return ERROR;
     bool flag1 = false, flag2 = false; ///Ver la cantidad de lineas y que no se pasen entre los archivos
@@ -197,20 +294,34 @@ TipoRet CAT(Directorio d, string nombreArchivo1, string nombreArchivo2)
     return NO_IMPLEMENTADO;
 }
 
-
-TipoRet PWD()
+TipoRet PWD(Directorio d)
 {
-    return NO_IMPLEMENTADO;
+    ruta = "/";
+    if(d->nom != "/")
+    {
+        Directorio aux=d;
+        ruta = ruta+aux->nom;
+        while(!esVacio2(aux->padre))
+        {
+            aux = aux->padre;
+            if(aux->nom != "/")
+            {
+                ruta = "/"+aux->nom + ruta;
+            }
+        }
+    }
+    else ruta = "/";
+    cout << ruta << endl;
+    return OK;
 }
+
 TipoRet RMDIR()
 {
     return NO_IMPLEMENTADO;
 }
 
-
-
-//opcionales
-TipoRet IC(Directorio d, string nombreArchivo, string texto)
+/// OPCIONALES
+TipoRet IC(Directorio &d, string nombreArchivo, string texto)
 {
     if(esVacio(d->contenido))
     {
@@ -219,96 +330,122 @@ TipoRet IC(Directorio d, string nombreArchivo, string texto)
     else
     {
         Archivo aux = buscoArchivo(d->contenido,nombreArchivo);
-        if(aux->nombreArchivo==nombreArchivo){
-        if(!hayComillas(texto))
+        if(aux->nombreArchivo==nombreArchivo)
         {
-            cout<<"No tiene comillas\n";
-            return ERROR;
+            if(!hayComillas(texto))
+            {
+                cout<<"No tiene comillas\n";
+                return ERROR;
+            }
+            else
+            {
+                if(texto.length() > TEXTO_MAX)
+                {
+                    cout<<"Muy largo\n";
+                    return ERROR;
+                }
+                else
+                {
+                    int x=0;
+                    while(x < LARGO_MAX && aux->contenido[x] != NULL)
+                    {
+                        x++;
+                    }
+                    aux->contenido[x] = new char[TEXTO_MAX];
+                    if(x>0)
+                    {
+                        int y;
+                        for(y=x; y>0; y--)
+                        {
+                            strcpy(aux->contenido[y],aux->contenido[y-1]);
+                        }
+                    }
+                    texto.copy(aux->contenido[0],TEXTO_MAX);
+                    aux->lineas++;
+                    return OK;
+                }
+            }
         }
         else
         {
-            if(texto.length() > TEXTO_MAX)
+            return ERROR;
+        }
+    }
+}
+
+TipoRet BC(Directorio &d,string nombreArchivo, int linea)
+{
+    if(esVacio(d->contenido))
+    {
+        return ERROR;
+    }
+    else
+    {
+        if(d->contenido->nombreArchivo.compare(nombreArchivo)==0)
+        {
+            int x=0;
+            while(d->contenido->contenido[x]!=NULL)
             {
-                cout<<"Muy largo\n";
+                x++;
+            }
+            int y;
+            if(x<=linea)
+            {
+                for(y=x-1; y>-1; y--)
+                {
+                    delete d->contenido->contenido[y];
+                }
+            }
+            else
+            {
+                for(y=0; y<x-linea; y++)
+                {
+                    strcpy(d->contenido->contenido[y],d->contenido->contenido[y+linea]);
+                }
+                for(y=x-linea; y<LARGO_MAX; y++)
+                {
+                    delete d->contenido->contenido[y];
+                }
+            }
+            return OK;
+        }
+        else
+        {
+            Archivo aux= buscoArchivo(d->contenido,nombreArchivo);
+            if(aux->nombreArchivo!=nombreArchivo)
+            {
                 return ERROR;
             }
             else
             {
                 int x=0;
-                while(x < LARGO_MAX && aux->contenido[x] != NULL)
+                while(aux->contenido[x]!=NULL)
                 {
                     x++;
                 }
-                aux->contenido[x] = new char[TEXTO_MAX];
-                if(x>0)
+                int y;
+                if(x<=linea)
                 {
-                    int y;
-                    for(y=x; y>0; y--)
+                    for(y=x-1; y>-1; y--)
                     {
-                        strcpy(aux->contenido[y],aux->contenido[y-1]);
+                        delete aux->contenido[y];
                     }
                 }
-                texto.copy(aux->contenido[0],TEXTO_MAX);
-                aux->lineas++;
+                else
+                {
+                    for(y=0; y<x-linea; y++)
+                    {
+                        strcpy(aux->contenido[y],aux->contenido[y+linea]);
+                    }
+                    for(y=x-linea; y<LARGO_MAX; y++)
+                    {
+                        delete aux->contenido[y];
+                    }
+                }
                 return OK;
             }
         }
-                                             }else{
-                                                return ERROR;
-                                                  }
     }
-}
-
-TipoRet BC(Directorio d,string nombreArchivo, int linea)
-{
-    if(esVacio(d->contenido)){
-        return ERROR;
-                             }else{
-                                if(d->contenido->nombreArchivo.compare(nombreArchivo)==0){
-                                  int x=0;
-                                  while(d->contenido->contenido[x]!=NULL){
-                                    x++;
-                                                                         }
-                                  int y;
-                                  if(x<=linea){
-                                    for(y=x-1;y>-1;y--){
-                                      delete d->contenido->contenido[y];
-                                                       }
-                                              }else{
-                                                 for(y=0;y<x-linea;y++){
-                                                   strcpy(d->contenido->contenido[y],d->contenido->contenido[y+linea]);
-                                                                       }
-                                                 for(y=x-linea;y<LARGO_MAX;y++){
-                                                   delete d->contenido->contenido[y];
-                                                                               }
-                                                   }
-                                  return OK;
-                                                                                         }else{
-                                                                                            Archivo aux= buscoArchivo(d->contenido,nombreArchivo);
-                                                                                            if(aux->nombreArchivo!=nombreArchivo){
-                                                                                              return ERROR;
-                                                                                                            }else{
-                                                                                                               int x=0;
-                                                                                                               while(aux->contenido[x]!=NULL){
-                                                                                                                 x++;
-                                                                                                                                             }
-                                                                                                               int y;
-                                                                                                               if(x<=linea){
-                                                                                                                 for(y=x-1;y>-1;y--){
-                                                                                                                   delete aux->contenido[y];
-                                                                                                                                    }
-                                                                                                                           }else{
-                                                                                                                              for(y=0;y<x-linea;y++){
-                                                                                                                                strcpy(aux->contenido[y],aux->contenido[y+linea]);
-                                                                                                                                                    }
-                                                                                                                              for(y=x-linea;y<LARGO_MAX;y++){
-                                                                                                                                 delete aux->contenido[y];
-                                                                                                                                                            }
-                                                                                                                                }
-                                                                                                               return OK;
-                                                                                                                 }
-                                                                                              }
-                                  }
 
 }
 
@@ -318,31 +455,31 @@ TipoRet UNDELETE()
     return NO_IMPLEMENTADO;
 }
 
-TipoRet DIR_S()
+TipoRet DIR_S(Directorio d)
 {
-    return NO_IMPLEMENTADO;
+    d = irAraiz(d);
+    moverseATodos(d);
+    return OK;
 }
+
 TipoRet COPY()
 {
     return NO_IMPLEMENTADO;
 }
 
-
-
-
-//otras
+/// OTRAS
 void MuestroRetorno(TipoRet ret)
 {
     switch(ret)
     {
     case OK:
-        cout<<"OK"<<endl;
+        cout<<"\e[32mOK\e[0m"<<endl;
         break;
     case ERROR:
-        cout<<"ERROR"<<endl;
+        cout<<"\e[31mERROR\e[0m"<<endl;
         break;
     case NO_IMPLEMENTADO:
-        cout<<"NO IMPLEMENTADO"<<endl;
+        cout<<"\e[33mNO IMPLEMENTADO\e[0m"<<endl;
         break;
     }
 }
@@ -372,11 +509,81 @@ Directorio CrearArchivo(Directorio d, string nombre)
 {
     Archivo nuevoArchivo = new _archivo;
     nuevoArchivo->nombreArchivo = nombre;
-    nuevoArchivo->ptrsig = d->contenido;
-    d->contenido = nuevoArchivo;
     for(int x = 0; x < LARGO_MAX; x++)
     {
-        d->contenido->contenido[x] = NULL;
+        nuevoArchivo->contenido[x] = NULL;
+    }
+    nuevoArchivo->archder=NULL;
+    nuevoArchivo->archizq=NULL;
+    if(esVacio(d->contenido))
+    {
+        d->contenido=nuevoArchivo;
+    }
+    else
+    {
+        Archivo aux=buscoArchivo(d->contenido,nombre);
+        if(aux->nombreArchivo>nombre)
+        {
+            aux->archizq=nuevoArchivo;
+        }
+        else
+        {
+            aux->archder=nuevoArchivo;
+        }
+    }
+    return d;
+}
+
+Directorio CrearDirectorio(Directorio &d, string padre, string nombre)
+{
+    Directorio nuevoDirectorio,Directoriopadre,aux;
+    Directorio root;
+    root=d;
+    if(padre=="/")
+    {
+        nuevoDirectorio=new _directorio;
+        nuevoDirectorio->nom=nombre;
+        nuevoDirectorio->padre=root;
+        nuevoDirectorio->hijo=NULL;
+        nuevoDirectorio->hermano=NULL;
+        root->hijo=nuevoDirectorio;
+    }
+    else
+    {
+        if(!esVacio2(d))
+        {
+            Directoriopadre=recorrida(root,padre);
+
+            if(!esVacio2(Directoriopadre))
+            {
+                nuevoDirectorio=new _directorio;
+                nuevoDirectorio->nom=nombre;
+                nuevoDirectorio->padre=Directoriopadre;
+                nuevoDirectorio->hijo=NULL;
+                nuevoDirectorio->hermano=NULL;
+                if(esVacio2(Directoriopadre->hijo))
+                {
+                    Directoriopadre->hijo=nuevoDirectorio;
+                }
+                else
+                {
+                    aux=Directoriopadre->hijo;
+                    while(!esVacio2(aux->hermano))
+                    {
+                        aux=aux->hermano;
+                    }
+                    aux->hermano=nuevoDirectorio;
+                }
+            }
+            else
+            {
+                cout << "Directorio padre no encontrado" << endl;
+            }
+        }
+        else
+        {
+            cout << "Directorio encontrado" << endl;
+        }
     }
     return d;
 }
@@ -420,8 +627,7 @@ Directorio eliminarArchivo(Directorio d, string nombre)
     }
     return d;
 }
-/*Concatenacion(){
-}*/
+
 bool esVacio(Archivo a)
 {
     if(a == NULL) return true;
@@ -430,97 +636,124 @@ bool esVacio(Archivo a)
 
 bool esVacio2(Directorio d)
 {
-    if(d==NULL){
-      return true;
-               }else{
-                  return false;
-                    }
+    if(d == NULL) return true;
+    else return false;
 }
 
 Archivo buscoArchivo(Archivo a, string nom)
 {
-    if(a->nombreArchivo==nom){
-      return a;
-                             }else{
-                                if(hojaArch(a)){
-                                  return a;
-                                               }else{
-                                                  if(nom<a->nombreArchivo){
-                                                    if(esVacio(a->archizq)){
-                                                      return a;
-                                                                           }else{
-                                                                              return buscoArchivo(a->archizq,nom);
-                                                                                }
-                                                                          }else{
-                                                                             if(esVacio(a->archder)){
-                                                                               return a;
-                                                                                                    }else{
-                                                                                                       return buscoArchivo(a->archder,nom);
-                                                                                                         }
-                                                                               }
-                                                    }
-                        }
+    if(a->nombreArchivo==nom)
+    {
+        return a;
+    }
+    else
+    {
+        if(hojaArch(a))
+        {
+            return a;
+        }
+        else
+        {
+            if(nom<a->nombreArchivo)
+            {
+                if(esVacio(a->archizq))
+                {
+                    return a;
+                }
+                else
+                {
+                    return buscoArchivo(a->archizq,nom);
+                }
+            }
+            else
+            {
+                if(esVacio(a->archder))
+                {
+                    return a;
+                }
+                else
+                {
+                    return buscoArchivo(a->archder,nom);
+                }
+            }
+        }
+    }
 }
 
-Directorio buscoDirectortio(Directorio d, string nom)
+Directorio buscoDirectorioHermano(Directorio d, string nombre)
 {
-    if(d->nom==nom){
-      return d;
-                   }else{
-                      if(hojaDir(d)){
-                        return d;
-                                    }else{
-                                       if(nom<d->nom){
-                                         if(esVacio2(d->dirizq)){
-                                           return d;
-                                                                }else{
-                                                                   return buscoDirectortio(d->dirizq,nom);
-                                                                     }
-                                                     }else{
-                                                        if(esVacio2(d->dirder)){
-                                                          return d;
-                                                                               }else{
-                                                                                  return buscoDirectortio(d->dirder,nom);
-                                                                                    }
-                                                          }
-                                         }
-                        }
+    if (esVacio2(d))
+        return NULL;
+
+    if (d->nom == nombre)
+        return d;
+
+    return buscoDirectorioHermano(d->hermano, nombre);
+}
+
+Directorio buscoDirectorioHijo(Directorio d, string nombre)
+{
+    if (esVacio2(d))
+        return NULL;
+    if (d->nom == nombre)
+        return d;
+    return buscoDirectorioHijo(d->hijo, nombre);
+}
+
+void moverseATodos(Directorio d)
+{
+    if(!esVacio2(d))
+    {
+
+        cout << "<contenido: " << d->nom << ">\n";
+        muestroArchivosDIRS(d->contenido);
+        moverseATodos(d->hijo);
+        moverseATodos(d->hermano);
+    }
 }
 
 bool hojaArch(Archivo a)
 {
-    if((esVacio(a->archizq))&&(esVacio(a->archder))){
-      return true;
-                                                    }else{
-                                                       return false;
-                                                         }
-}
-
-bool hojaDir(Directorio d)
-{
-    if((esVacio2(d->dirizq))&&(esVacio2(d->dirder))){
-      return true;
-                                                    }else{
-                                                       return false;
-                                                         }
+    if((esVacio(a->archizq))&&(esVacio(a->archder)))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void muestroArchivos(Archivo a)
 {
-    if(!esVacio(a)){
-      muestroArchivos(a->archizq);
-      cout<<a->nombreArchivo<<"     Archivo     "<<tamanio(a)<<endl;
-      muestroArchivos(a->archder);
-                   }
+    if(!esVacio(a))
+    {
+        muestroArchivos(a->archizq);
+        cout << a->nombreArchivo;
+        if(a->nombreArchivo.length() <= 7) cout << "\t";
+        if(a->nombreArchivo.length() <= 13) cout << "\t";
+        cout << "\tArchivo \t" << tamanio(a) << "\t" << a->lineas << endl;
+        muestroArchivos(a->archder);
+    }
+}
+
+void muestroArchivosDIRS(Archivo a)
+{
+    if(!esVacio(a))
+    {
+        muestroArchivosDIRS(a->archizq);
+        cout << a->nombreArchivo << "     Archivo"<< endl;
+        muestroArchivosDIRS(a->archder);
+    }
 }
 
 void muestroDirectorios(Directorio d)
 {
-    if(!esVacio2(d)){
-      muestroDirectorios(d->dirizq);
-      cout<<d->nom<<"     Directorio"<<endl;
-      muestroDirectorios(d->dirder);
-                    }
+    if(!esVacio2(d))
+    {
+        cout<<d->nom<<"     Directorio"<<endl;
+        muestroDirectorios(d->hermano);
+    }
 }
 
 void muestroTodo(Directorio raiz)
@@ -528,7 +761,7 @@ void muestroTodo(Directorio raiz)
     ///queda para despues
 }
 
-void cargarDatosDePrueba(Directorio d)
+void cargarDatosDePrueba(Directorio &d)
 {
     string a;
     a = (char)34;
@@ -547,39 +780,93 @@ void cargarDatosDePrueba(Directorio d)
     IC(d,"Led_Zeppelin.mp3",a+"Black Dog"+a);
 }
 
+Directorio recorrida(Directorio d, string texto)
+{
+    string ruta,txt2;
+    if(texto=="/")
+    {
+        return irAraiz(d);
+    }
+    else
+    {
+        int pos=texto.find('/');
+        if(pos==0)
+        {
+            d=irAraiz(d);
+            txt2=texto.substr(1);
+            pos=txt2.find('/');
+        }
+        else
+        {
+            txt2=texto;
+        }
+        txt2=txt2.substr(pos+1);
+        string destino=texto.substr(texto.find_last_of('/')+1);
 
+        while(!esVacio2(d)&&(pos!=-1))
+        {
+            ruta=txt2.substr(0,pos);
+            d=buscoDirectorioHermano(d->hijo,ruta);
+            pos=txt2.find('/');
+            if(pos!=-1)
+            {
+                txt2=txt2.substr(pos+1);
+            }
 
+        }
+        if(!esVacio2(d))
+        {
+            d=buscoDirectorioHermano(d->hijo,destino);
+        }
+        return d;
+    }
+}
 
+Directorio cargarDirectoriosDePrueba(Directorio d)
+{
+    Directorio a = NULL;
+    a = new _directorio;
+    a->nom = "dir1";
+    a->hijo = NULL;
+    a->hermano = NULL;
+    a->contenido = NULL;
+    a->padre = d;
+    d->hijo = a;
+    cargarDatosDePrueba(a);
 
+    Directorio c = NULL;
+    c = new _directorio;
+    c->nom = "dir2";
+    c->hijo = NULL;
+    c->hermano = NULL;
+    c->contenido = NULL;
+    c->padre = d;
+    a->hermano = c;
+    cargarDatosDePrueba(c);
 
+    Directorio b = NULL;
+    b = new _directorio;
+    b->nom = "dir21";
+    b->hijo = NULL;
+    b->hermano = NULL;
+    b->contenido = NULL;
+    b->padre = c;
+    c->hijo = b;
+    cargarDatosDePrueba(b);
 
+    return d;
+}
 
+void colorAlTexto()
+{
+    cout << "\e[1;92mLABORATORIO\e[0m:\e[36m "<< ruta << "\e[0m$ ";
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Directorio irAraiz(Directorio d)
+{
+    while(!esVacio2(d->padre))
+    {
+        d=d->padre;
+    }
+    return d;
+}
