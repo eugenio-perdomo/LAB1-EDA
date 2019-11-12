@@ -133,9 +133,13 @@ TipoRet MKDIR(Directorio &d, string nombre_directorio)
 {
     int ocurrencia = count(nombre_directorio.begin(), nombre_directorio.end(), '/');
 
+
+    /// Hacerlo sin el padre
+
+
     if(ocurrencia == 0)
     {
-        /// donde estamos parados
+        d = CrearDirectorio(d,d->nom,nombre_directorio);
     }
 
     else if(ocurrencia == 1)
@@ -536,17 +540,15 @@ Directorio CrearArchivo(Directorio d, string nombre)
 
 Directorio CrearDirectorio(Directorio &d, string padre, string nombre)
 {
-    Directorio nuevoDirectorio,Directoriopadre,aux;
-    Directorio root;
-    root=d;
+    Directorio nuevoDirectorio,Directoriopadre,aux,root = d;
     if(padre=="/")
     {
-        nuevoDirectorio=new _directorio;
-        nuevoDirectorio->nom=nombre;
-        nuevoDirectorio->padre=root;
-        nuevoDirectorio->hijo=NULL;
-        nuevoDirectorio->hermano=NULL;
-        root->hijo=nuevoDirectorio;
+        nuevoDirectorio = new _directorio;
+        nuevoDirectorio->nom = nombre;
+        nuevoDirectorio->padre = root;
+        nuevoDirectorio->hijo = NULL;
+        nuevoDirectorio->hermano = NULL;
+        recorrerDirectorioHermano(root->hijo)->hermano = nuevoDirectorio;
     }
     else
     {
@@ -691,6 +693,16 @@ Directorio buscoDirectorioHermano(Directorio d, string nombre)
     return buscoDirectorioHermano(d->hermano, nombre);
 }
 
+Directorio recorrerDirectorioHermano(Directorio d)
+{
+    if (!esVacio2(d->hermano))
+    {
+
+        return recorrerDirectorioHermano(d->hermano);
+    }
+    return d;
+}
+
 Directorio buscoDirectorioHijo(Directorio d, string nombre)
 {
     if (esVacio2(d))
@@ -832,7 +844,6 @@ Directorio cargarDirectoriosDePrueba(Directorio d)
     a->contenido = NULL;
     a->padre = d;
     d->hijo = a;
-    cargarDatosDePrueba(a);
 
     Directorio c = NULL;
     c = new _directorio;
@@ -842,7 +853,6 @@ Directorio cargarDirectoriosDePrueba(Directorio d)
     c->contenido = NULL;
     c->padre = d;
     a->hermano = c;
-    cargarDatosDePrueba(c);
 
     Directorio b = NULL;
     b = new _directorio;
@@ -852,7 +862,6 @@ Directorio cargarDirectoriosDePrueba(Directorio d)
     b->contenido = NULL;
     b->padre = c;
     c->hijo = b;
-    cargarDatosDePrueba(b);
 
     return d;
 }
