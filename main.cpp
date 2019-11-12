@@ -12,31 +12,21 @@ using namespace std;
 #include "Funciones.cpp"
 
 /** TODO
-    CAT, UNDELETE, DELETE, CD, RMDIR, DIR_S, COPY
-    MKDIR y PWD en proceso.
+    CAT, UNDELETE, DELETE, RMDIR, COPY
+    MKDIR y DIR S en proceso.
 */
 int main()
 {
     string comando,tipo,texto,subComando,nombre_archivo;
     int espacio = 0,pos = 0;
-    Directorio d = NULL;
-    d = new _directorio;
-    d->nom = "/";
-    d->hijo = NULL;
-    d->hermano = NULL;
-    d->contenido = NULL;
-    getchar();
+    Directorio d = CreoDirectorio(d);
     d = cargarDirectoriosDePrueba(d);
-    muestroDirectorios(d->hijo);
-
-
-    cout<<"hola" << endl;
-    d = recorrida(d->hijo, "/asd/asd");
-
     cargarDatosDePrueba(d);
     bool flag = true;
+
     while(flag == true)
     {
+        colorAlTexto();
         getline(cin,comando,'\n');
         cin.clear();
         pos = comando.find(' ');
@@ -73,8 +63,9 @@ int main()
             MuestroRetorno(BF(d,subComando,0));
         }
 
-        if(tipo.compare("CAT") == 0) {}
-        //MuestroRetorno(CAT());
+        if(tipo.compare("CAT") == 0)
+            MuestroRetorno(CAT());
+
         if(tipo.compare("IC") == 0)
         {
             espacio = subComando.find(' ');
@@ -83,13 +74,23 @@ int main()
             MuestroRetorno(IC(d,subComando,texto));
         }
         if(tipo.compare("MKDIR") == 0)
+        {
+            espacio = subComando.find(' ');
+            texto = subComando.substr(espacio + 1);
+            subComando = subComando.substr(0,espacio);
             MuestroRetorno(MKDIR(d,subComando));
+        }
+
 
         if(tipo.compare("PWD") == 0)
             MuestroRetorno(PWD(d));
 
+        if(tipo.compare("DIR S") == 0)
+            MuestroRetorno(DIR_S(d));
+
         if(tipo.compare("BC") == 0)
             cout << "BC";
+        //MuestroRetorno(BC());
 
         if(tipo.compare("FIN") == 0)
             flag = false;
