@@ -28,34 +28,52 @@ TipoRet DIR(Directorio d)
 
 TipoRet CREATE(Directorio &d, string nombre_archivo)
 {
+    string arch=nombre_archivo.substr(nombre_archivo.find_last_of('/')+1);
+    string dir=nombre_archivo.substr(0,nombre_archivo.find_last_of('/'));
+    Directorio ubicacion;
+    if(nombre_archivo.find_last_of('/')==0){
+      ubicacion=irAraiz(d);
+                                           }else{
+                                              dir=nombre_archivo.substr(0,nombre_archivo.find_last_of('/'));
+                                              if(dir!=arch){
+                                                ubicacion=recorrida(d,dir);
+                                                           }else{
+                                                              ubicacion=d;
+                                                                }
+                                                }
+    if(esVacio2(ubicacion)){
+      return ERROR;
+                           }else{
+
     int posicion = 0;
-    if(nombre_archivo.length() < LARGONOMBRE)
+    if(arch.length() < LARGONOMBRE)
     {
-        posicion = nombre_archivo.find('.');
+        posicion = arch.find('.');
         if(posicion < 0)
         {
             return ERROR;
         }
         else
         {
-            if(esVacio(d->contenido))
+            if(esVacio(ubicacion->contenido))
             {
-                d = CrearArchivo(d,nombre_archivo);
+                ubicacion = CrearArchivo(ubicacion,arch);
                 return OK;
             }
-            if(buscoArchivo(d->contenido,nombre_archivo)->nombreArchivo==nombre_archivo)
+            if(buscoArchivo(ubicacion->contenido,arch)->nombreArchivo==arch)
             {
                 return ERROR;
             }
             else
             {
-                d = CrearArchivo(d,nombre_archivo);
+                ubicacion = CrearArchivo(ubicacion,arch);
                 return OK;
             }
 
         }
     }
     else return ERROR;
+                                }
 }
 
 TipoRet IF(Directorio &d, string nombreArchivo, string texto)
