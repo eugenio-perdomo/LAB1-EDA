@@ -228,23 +228,39 @@ TipoRet CD(Directorio &d, string ruta)
 /// TIPO 2
 TipoRet DELETE(Directorio &d, string palabra)
 {
-    Archivo aux = d->contenido;
+    string arch=palabra.substr(palabra.find_last_of('/')+1);
+    string dir=palabra.substr(0,palabra.find_last_of('/'));
+    Directorio ubicacion;
+    if(palabra.find_last_of('/')==0){
+      ubicacion=irAraiz(d);
+                                           }else{
+                                              dir=palabra.substr(0,palabra.find_last_of('/'));
+                                              if(dir!=arch){
+                                                ubicacion=recorrida(d,dir);
+                                                           }else{
+                                                              ubicacion=d;
+                                                                }
+                                                }
+    if(esVacio2(ubicacion)){
+      return ERROR;
+                           }else{
+    Archivo aux = ubicacion->contenido;
     while(!esVacio(aux))
     {
-        if(aux->nombreArchivo.compare(palabra) == 0)
+        if(aux->nombreArchivo.compare(arch) == 0)
         {
-            cout << palabra << endl;
+            cout << arch << endl;
 
             if(!hojaArch(aux))
             {
                 ///desenganchar y enganchar todo;
             }
-            d = eliminarArchivo(d,palabra);
+            ubicacion = eliminarArchivo(ubicacion,palabra);
             return OK;
         }
         else
         {
-            if(palabra<aux->nombreArchivo)
+            if(arch<aux->nombreArchivo)
             {
                 aux=aux->archizq;
             }
@@ -255,6 +271,7 @@ TipoRet DELETE(Directorio &d, string palabra)
         }
     }
     return ERROR;
+                                }
 }
 
 TipoRet BF(Directorio &d, string nombreArchivo, int linea)
