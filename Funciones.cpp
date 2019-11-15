@@ -244,33 +244,13 @@ TipoRet DELETE(Directorio &d, string palabra)
     if(esVacio2(ubicacion)){
       return ERROR;
                            }else{
-    Archivo aux = ubicacion->contenido;
-    while(!esVacio(aux))
-    {
-        if(aux->nombreArchivo.compare(arch) == 0)
-        {
-            cout << arch << endl;
-
-            if(!hojaArch(aux))
-            {
-                ///desenganchar y enganchar todo;
-            }
-            ubicacion = eliminarArchivo(ubicacion,palabra);
-            return OK;
-        }
-        else
-        {
-            if(arch<aux->nombreArchivo)
-            {
-                aux=aux->archizq;
-            }
-            else
-            {
-                aux=aux->archder;
-            }
-        }
-    }
-    return ERROR;
+    Archivo aux=buscoArchivo(ubicacion->contenido,arch);
+    if(aux->nombreArchivo!=arch){
+      return ERROR;
+                                }else{
+                                   delete aux;
+                                   return OK;
+                                     }
                                 }
 }
 
