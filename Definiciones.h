@@ -6,12 +6,10 @@ typedef enum _retorno
     OK,ERROR,NO_IMPLEMENTADO
 } TipoRet;
 
-typedef char *Cadena;
-
 typedef struct _archivo
 {
     std::string nombreArchivo;
-    Cadena contenido[LARGO_MAX];
+    string contenido[LARGO_MAX];
     _archivo *ptrsig;
     int lineas;
     _archivo *archizq;
@@ -38,7 +36,7 @@ TipoRet CD(Directorio &d, string ruta);
 /// tipo2
 TipoRet DELETE(Directorio &d, std::string palabra);
 TipoRet BF(Directorio &d,string nombreArchivo, int linea);
-TipoRet CAT();
+TipoRet CAT(Directorio &d, string nombreArchivo1, string nombreArchivo2);
 TipoRet PWD(Directorio d);
 TipoRet RMDIR();
 
@@ -46,7 +44,7 @@ TipoRet RMDIR();
 TipoRet IC(Directorio &d, std::string nombreArchivo, string texto);
 TipoRet BC();
 TipoRet UNDELETE();
-TipoRet DIR_S();
+TipoRet DIR_S(Directorio d);
 TipoRet COPY();
 
 /// otras
@@ -65,10 +63,15 @@ Directorio buscoDirectorioHijo(Directorio d, string nombre);
 bool hojaArch(Archivo a);
 bool hojaDir(Directorio d);
 void muestroArchivos(Archivo a);
+void muestroArchivosDIRS(Archivo a);
 void muestroDirectorios(Directorio d);
 void muestroTodo(Directorio raiz);
 void cargarDatosDePrueba(Directorio &d);
 Directorio recorrida(Directorio d, string texto);
 Directorio cargarDirectoriosDePrueba(Directorio d);
 Directorio buscoDirectorio(Directorio d, string nombre);
+Directorio recorrerDirectorioHermano(Directorio d);
+Directorio irAraiz(Directorio d);
+void moverseATodos(Directorio d);
+void colorAlTexto();
 #endif // DEFINICIONES_H_INCLUDED
