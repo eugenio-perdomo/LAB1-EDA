@@ -12,14 +12,14 @@ using namespace std;
 #include "Funciones.cpp"
 
 /** TODO
-    CAT, UNDELETE, DELETE, RMDIR, COPY
-    MKDIR en proceso.
+    UNDELETE, RMDIR, COPY
+    MKDIR errores con la ocurrencia = 0, no encuentra a padre;
 */
 int main()
 {
     string comando,tipo,texto,subComando,nombre_archivo;
     int espacio = 0,pos = 0;
-    Directorio d = CreoDirectorio(d);
+    Directorio d = CreoDirectorio();
     d = cargarDirectoriosDePrueba(d);
     cargarDatosDePrueba(d);
     bool flag = true;
@@ -45,11 +45,8 @@ int main()
             }
         }
 
-
         if(tipo.compare("CREATE") == 0)
             MuestroRetorno(CREATE(d,subComando));
-
-
 
         if(tipo.compare("IF") == 0)
         {
@@ -76,7 +73,12 @@ int main()
         }
 
         if(tipo.compare("CAT") == 0)
-            MuestroRetorno(CAT());
+        {
+            espacio = subComando.find(' ');
+            texto = subComando.substr(espacio + 1);
+            subComando = subComando.substr(0,espacio);
+            MuestroRetorno(CAT(d,subComando,texto));
+        }
 
         if(tipo.compare("IC") == 0)
         {
@@ -93,14 +95,15 @@ int main()
             MuestroRetorno(MKDIR(d,subComando));
         }
 
-
         if(tipo.compare("PWD") == 0)
             MuestroRetorno(PWD(d));
 
-
         if(tipo.compare("BC") == 0)
-            cout << "BC";
-        //MuestroRetorno(BC());
+        {
+            espacio = subComando.find(' ');
+            subComando = subComando.substr(0,espacio);
+            MuestroRetorno(BC(d,subComando,0));
+        }
 
         if(tipo.compare("FIN") == 0)
             flag = false;
@@ -112,7 +115,6 @@ int main()
             subComando = subComando.substr(0,espacio);
             MuestroRetorno(CD(d,subComando));
         }
-
     }
     return 0;
 }
