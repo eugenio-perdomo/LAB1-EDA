@@ -43,7 +43,7 @@ TipoRet RMDIR();
 /// opcionales
 TipoRet IC(Directorio &d, std::string nombreArchivo, string texto);
 TipoRet BC();
-TipoRet UNDELETE();
+TipoRet UNDELETE(Directorio &d, Archivo &repuesto, string &ruta);
 TipoRet DIR_S(Directorio d);
 TipoRet COPY();
 
