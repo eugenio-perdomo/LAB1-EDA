@@ -20,6 +20,8 @@ int main()
     string comando,tipo,texto,subComando,nombre_archivo;
     int espacio = 0,pos = 0;
     Directorio d = NULL;
+    Archivo repuesto=NULL;
+    string ruta;
     d = new _directorio;
     d->nom = "/";
     d->hijo = NULL;
@@ -56,7 +58,7 @@ int main()
             MuestroRetorno(DELETE(d,subComando));
 
         if(tipo.compare("UNDELETE") == 0)
-            MuestroRetorno(UNDELETE());
+            MuestroRetorno(UNDELETE(d,repuesto,ruta));
 
         if(tipo.compare("BF") == 0)
         {
@@ -85,7 +87,13 @@ int main()
 
         if(tipo.compare("FIN") == 0)
             flag = false;
-
+        
+        if(tipo.compare("CD") == 0)
+        {
+            espacio = subComando.find(' ');
+            texto = subComando.substr(espacio + 1);
+            subComando = subComando.substr(0,espacio);
+            MuestroRetorno(CD(d,subComando));
     }
     return 0;
 }
