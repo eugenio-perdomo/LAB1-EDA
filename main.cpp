@@ -13,8 +13,7 @@ using namespace std;
 #include "Funciones.cpp"
 
 /** TODO
-    CAT, UNDELETE, DELETE, CD, RMDIR, DIR_S, COPY
-    MKDIR y PWD en proceso.
+    CAT, UNDELETE, RMDIR, COPY en proceso.
 */
 int main()
 {
