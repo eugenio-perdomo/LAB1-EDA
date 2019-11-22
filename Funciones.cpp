@@ -282,6 +282,7 @@ TipoRet DELETE(Directorio &d, string palabra)
                                                                   mini->archizq=auxizq;
                                                                     }
                                                      }
+                                   ///copiar a resp y la ruta
                                    delete aux;
                                    cout<<ubicacion->contenido->nombreArchivo<<": "<<ubicacion->contenido<<endl;
                                    cout<<ubicacion->contenido->archder->nombreArchivo<<": "<<ubicacion->contenido->archder<<endl;
@@ -589,10 +590,38 @@ TipoRet BC(Directorio &d,string nombreArchivo, int linea)
                                 }
 }
 
-TipoRet UNDELETE()
+TipoRet UNDELETE(Directorio &d, Archivo &repuesto, string &ruta)
 {
-    //exclusivamente el ultimo
-    return NO_IMPLEMENTADO;
+    string arch=ruta.substr(ruta.find_last_of('/')+1);
+    string dir=ruta.substr(0,ruta.find_last_of('/'));
+    Directorio ubicacion;
+    if(ruta.find_last_of('/')==0){
+      ubicacion=irAraiz(d);
+                                           }else{
+                                              dir=ruta.substr(0,ruta.find_last_of('/'));
+                                              if(dir!=arch){
+                                                ubicacion=recorrida(d,dir);
+                                                           }else{
+                                                              ubicacion=d;
+                                                                }
+                                                }
+    if(esVacio2(ubicacion)){
+      return ERROR;
+                           }else{
+                              Archivo aux=buscoArchivo(ubicacion->contenido,arch);
+                              if(aux->nombreArchivo==arch){
+                                return ERROR;
+                                                          }else{
+                                                             Archivo aux2=new _archivo;
+                                                             aux2=repuesto;
+                                                             if(aux2->nombreArchivo>aux->nombreArchivo){
+                                                               aux->archder=aux2;
+                                                                                                       }else{
+                                                                                                          aux->archizq=aux2;
+                                                                                                            }
+                                                             return OK;
+                                                               }
+                                }
 }
 
 TipoRet DIR_S(Directorio d)
