@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
@@ -12,37 +11,43 @@ using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
-/** TODO
-    CAT, RMDIR, COPY en proceso.
+/** TODO RMDIR, COPY
+    MKDIR errores con la ocurrencia = 0, no encuentra a padre;
 */
 int main()
 {
     string comando,tipo,texto,subComando,nombre_archivo;
     int espacio = 0,pos = 0;
-    Directorio d = NULL;
+    Directorio d = CreoDirectorio();
     Archivo repuesto=new _archivo;
     string camino;
-    d = new _directorio;
-    d->nom = "/";
-    d->hijo = NULL;
-    d->padre=NULL;
-    d->contenido = NULL;
+    d = cargarDirectoriosDePrueba(d);
     cargarDatosDePrueba(d);
-    d=cargarDirectoriosDePrueba(d);
     bool flag = true;
+
     while(flag == true)
     {
+        colorAlTexto();
         getline(cin,comando,'\n');
         cin.clear();
         pos = comando.find(' ');
         tipo = comando.substr(0, pos);
         subComando = comando.substr(pos + 1);
 
+        if(tipo.compare("DIR") == 0)
+        {
+            if(subComando.compare("S") == 0)
+            {
+                MuestroRetorno(DIR_S(d));
+            }
+            else
+            {
+                MuestroRetorno(DIR(d));
+            }
+        }
+
         if(tipo.compare("CREATE") == 0)
             MuestroRetorno(CREATE(d,subComando));
-
-        if(tipo.compare("DIR") == 0)
-            MuestroRetorno(DIR(d));
 
         if(tipo.compare("IF") == 0)
         {
@@ -56,7 +61,7 @@ int main()
             MuestroRetorno(TYPE(d,subComando));
 
         if(tipo.compare("DELETE") == 0)
-            MuestroRetorno(DELETE(d,subComando,repuesto,ruta));
+            MuestroRetorno(DELETE(d,subComando,repuesto,camino));
 
         if(tipo.compare("UNDELETE") == 0)
             MuestroRetorno(UNDELETE(d,repuesto,ruta));
@@ -68,8 +73,14 @@ int main()
             MuestroRetorno(BF(d,subComando,0));
         }
 
-        if(tipo.compare("CAT") == 0) {}
-        //MuestroRetorno(CAT());
+        if(tipo.compare("CAT") == 0)
+        {
+            espacio = subComando.find(' ');
+            texto = subComando.substr(espacio + 1);
+            subComando = subComando.substr(0,espacio);
+            MuestroRetorno(CAT(d,subComando,texto));
+        }
+
         if(tipo.compare("IC") == 0)
         {
             espacio = subComando.find(' ');
@@ -78,13 +89,22 @@ int main()
             MuestroRetorno(IC(d,subComando,texto));
         }
         if(tipo.compare("MKDIR") == 0)
+        {
+            espacio = subComando.find(' ');
+            texto = subComando.substr(espacio + 1);
+            subComando = subComando.substr(0,espacio);
             MuestroRetorno(MKDIR(d,subComando));
+        }
 
         if(tipo.compare("PWD") == 0)
             MuestroRetorno(PWD(d));
 
         if(tipo.compare("BC") == 0)
-            cout << "BC";
+        {
+            espacio = subComando.find(' ');
+            subComando = subComando.substr(0,espacio);
+            MuestroRetorno(BC(d,subComando,0));
+        }
 
         if(tipo.compare("FIN") == 0)
             flag = false;
@@ -96,8 +116,6 @@ int main()
             subComando = subComando.substr(0,espacio);
             MuestroRetorno(CD(d,subComando));
         }
-
     }
     return 0;
 }
-
