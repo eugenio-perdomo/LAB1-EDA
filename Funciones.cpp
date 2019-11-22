@@ -1,5 +1,5 @@
 /// TIPO 1
-string ruta = "/";
+string ruta="/";
 Directorio CreoDirectorio(Directorio d)
 {
     d = new _directorio;
@@ -209,10 +209,10 @@ TipoRet MKDIR(Directorio &d, string nombre_directorio)
     return OK;
 }
 
-TipoRet CD(Directorio &d, string ruta)
+TipoRet CD(Directorio &d, string camino)
 {
     Directorio aux=d;
-    aux=recorrida(aux,ruta);
+    aux=recorrida(aux,camino);
     if(esVacio2(aux))
     {
         return ERROR;
@@ -226,7 +226,7 @@ TipoRet CD(Directorio &d, string ruta)
 }
 
 /// TIPO 2
-TipoRet DELETE(Directorio &d, string palabra)
+TipoRet DELETE(Directorio &d, string palabra, Archivo &repuesto, string &camino)
 {
     string arch=palabra.substr(palabra.find_last_of('/')+1);
     string dir=palabra.substr(0,palabra.find_last_of('/'));
@@ -282,7 +282,17 @@ TipoRet DELETE(Directorio &d, string palabra)
                                                                   mini->archizq=auxizq;
                                                                     }
                                                      }
-                                   ///copiar a resp y la ruta
+                                   repuesto->nombreArchivo=aux->nombreArchivo;
+                                   repuesto->lineas=aux->lineas;
+                                   int x;
+                                   for(x=0;x<LARGO_MAX;x++){
+                                     repuesto->contenido[x]=aux->contenido[x];
+                                                           }
+                                   camino="/"+aux->nombreArchivo;
+                                   while(!esVacio2(ubicacion->padre)){
+                                     camino="/"+ubicacion->nom+camino;
+                                     ubicacion=ubicacion->padre;
+                                                                     }
                                    delete aux;
                                    cout<<ubicacion->contenido->nombreArchivo<<": "<<ubicacion->contenido<<endl;
                                    cout<<ubicacion->contenido->archder->nombreArchivo<<": "<<ubicacion->contenido->archder<<endl;
@@ -590,15 +600,15 @@ TipoRet BC(Directorio &d,string nombreArchivo, int linea)
                                 }
 }
 
-TipoRet UNDELETE(Directorio &d, Archivo &repuesto, string &ruta)
+TipoRet UNDELETE(Directorio &d, Archivo repuesto, string camino)
 {
-    string arch=ruta.substr(ruta.find_last_of('/')+1);
-    string dir=ruta.substr(0,ruta.find_last_of('/'));
+    string arch=camino.substr(camino.find_last_of('/')+1);
+    string dir=camino.substr(0,camino.find_last_of('/'));
     Directorio ubicacion;
-    if(ruta.find_last_of('/')==0){
+    if(camino.find_last_of('/')==0){
       ubicacion=irAraiz(d);
                                            }else{
-                                              dir=ruta.substr(0,ruta.find_last_of('/'));
+                                              dir=camino.substr(0,camino.find_last_of('/'));
                                               if(dir!=arch){
                                                 ubicacion=recorrida(d,dir);
                                                            }else{
@@ -945,7 +955,7 @@ void cargarDatosDePrueba(Directorio &d)
 
 Directorio recorrida(Directorio d, string texto)
 {
-    string ruta,txt2;
+    string camino,txt2;
     if(texto=="/")
     {
         return irAraiz(d);
@@ -968,8 +978,8 @@ Directorio recorrida(Directorio d, string texto)
 
         while(!esVacio2(d)&&(pos!=-1))
         {
-            ruta=txt2.substr(0,pos);
-            d=buscoDirectorioHermano(d->hijo,ruta);
+            camino=txt2.substr(0,pos);
+            d=buscoDirectorioHermano(d->hijo,camino);
             pos=txt2.find('/');
             if(pos!=-1)
             {
@@ -989,7 +999,7 @@ Directorio cargarDirectoriosDePrueba(Directorio d)
 {
     Directorio a = NULL;
     a = new _directorio;
-    a->nom = "dir1";
+    a->nom = "directorio1";
     a->hijo = NULL;
     a->hermano = NULL;
     a->contenido = NULL;
@@ -999,7 +1009,7 @@ Directorio cargarDirectoriosDePrueba(Directorio d)
 
     Directorio c = NULL;
     c = new _directorio;
-    c->nom = "dir2";
+    c->nom = "directorio2";
     c->hijo = NULL;
     c->hermano = NULL;
     c->contenido = NULL;
@@ -1009,13 +1019,22 @@ Directorio cargarDirectoriosDePrueba(Directorio d)
 
     Directorio b = NULL;
     b = new _directorio;
-    b->nom = "dir21";
+    b->nom = "directorio21";
     b->hijo = NULL;
     b->hermano = NULL;
     b->contenido = NULL;
     b->padre = c;
     c->hijo = b;
     cargarDatosDePrueba(b);
+
+    Directorio e=new _directorio;
+    e->nom="directorio11";
+    e->hijo = NULL;
+    e->hermano = NULL;
+    e->contenido = NULL;
+    e->padre=a;
+    a->hijo=e;
+    cargarDatosDePrueba(e);
 
     return d;
 }
