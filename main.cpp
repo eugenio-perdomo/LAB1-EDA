@@ -13,21 +13,22 @@ using namespace std;
 #include "Funciones.cpp"
 
 /** TODO
-    CAT, UNDELETE, RMDIR, COPY en proceso.
+    CAT, RMDIR, COPY en proceso.
 */
 int main()
 {
     string comando,tipo,texto,subComando,nombre_archivo;
     int espacio = 0,pos = 0;
     Directorio d = NULL;
-    Archivo repuesto=NULL;
-    string ruta;
+    Archivo repuesto=new _archivo;
+    string camino;
     d = new _directorio;
     d->nom = "/";
     d->hijo = NULL;
     d->padre=NULL;
     d->contenido = NULL;
     cargarDatosDePrueba(d);
+    d=cargarDirectoriosDePrueba(d);
     bool flag = true;
     while(flag == true)
     {
@@ -55,7 +56,7 @@ int main()
             MuestroRetorno(TYPE(d,subComando));
 
         if(tipo.compare("DELETE") == 0)
-            MuestroRetorno(DELETE(d,subComando));
+            MuestroRetorno(DELETE(d,subComando,repuesto,ruta));
 
         if(tipo.compare("UNDELETE") == 0)
             MuestroRetorno(UNDELETE(d,repuesto,ruta));
@@ -80,20 +81,22 @@ int main()
             MuestroRetorno(MKDIR(d,subComando));
 
         if(tipo.compare("PWD") == 0)
-            MuestroRetorno(PWD(d,d->nom));
+            MuestroRetorno(PWD(d));
 
         if(tipo.compare("BC") == 0)
             cout << "BC";
 
         if(tipo.compare("FIN") == 0)
             flag = false;
-        
+
         if(tipo.compare("CD") == 0)
         {
             espacio = subComando.find(' ');
             texto = subComando.substr(espacio + 1);
             subComando = subComando.substr(0,espacio);
             MuestroRetorno(CD(d,subComando));
+        }
+
     }
     return 0;
 }
