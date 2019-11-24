@@ -477,9 +477,80 @@ TipoRet PWD(Directorio d)
     return OK;
 }
 
-TipoRet RMDIR()
+TipoRet RMDIR(Directorio &d, string nombre_Directorio)
 {
-    return NO_IMPLEMENTADO;
+    string victima=nombre_Directorio.substr(nombre_Directorio.find_last_of('/')+1);
+    string camino=nombre_Directorio.substr(0,nombre_Directorio.find_last_of('/'));
+    string aux=conseguir_ruta(d);
+    Directorio ubicacion;
+    if(nombre_Directorio.find_last_of('/')==0)
+    {
+        ubicacion=irAraiz(d);
+    }
+    else
+    {
+        camino=nombre_Directorio.substr(0,nombre_Directorio.find_last_of('/'));
+        if(camino!=victima)
+        {
+            ubicacion=recorrida(d,camino);
+        }
+        else
+        {
+            ubicacion=d;
+        }
+    }
+    if(esVacio2(ubicacion))
+    {
+        return ERROR;
+    }
+    else
+    {
+
+        if(esVacio2(ubicacion->hijo))
+        {
+            return ERROR;
+        }
+        else
+        {
+            ubicacion=buscoDirectorioHermano(ubicacion->hijo,victima);
+            if(esVacio2(ubicacion))
+            {
+                return ERROR;
+            }
+            else
+            {
+                if(conseguir_ruta(ubicacion)==aux)
+                {
+                    return ERROR;
+                }
+                else
+                {
+                    if(aux.find(conseguir_ruta(ubicacion))>=0)
+                    {
+                        return ERROR;
+                    }
+                    else
+                    {
+                        if(ubicacion==ubicacion->padre->hijo)
+                        {
+                            ubicacion->padre->hijo=ubicacion->padre->hijo->hermano;
+                        }
+                        else
+                        {
+                            Directorio aux2=ubicacion->padre->hijo;
+                            while(aux2->hermano!=ubicacion)
+                            {
+                                aux2=aux2->hermano;
+                            }
+                            aux2->hermano=ubicacion->hermano;
+                        }
+                        delete ubicacion;
+                        return OK;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /// OPCIONALES
