@@ -11,15 +11,16 @@ using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
-/** TODO
-    UNDELETE, RMDIR, COPY
-    MKDIR errores con la ocurrencia = 0, no encuentra a padre;
+/** TODO RMDIR, falta una funcion
+*
 */
 int main()
 {
     string comando,tipo,texto,subComando,nombre_archivo;
     int espacio = 0,pos = 0;
     Directorio d = CreoDirectorio();
+    Archivo repuesto=new _archivo;
+    string camino;
     d = cargarDirectoriosDePrueba(d);
     cargarDatosDePrueba(d);
     bool flag = true;
@@ -60,10 +61,10 @@ int main()
             MuestroRetorno(TYPE(d,subComando));
 
         if(tipo.compare("DELETE") == 0)
-            MuestroRetorno(DELETE(d,subComando));
+            MuestroRetorno(DELETE(d,subComando,repuesto,camino));
 
         if(tipo.compare("UNDELETE") == 0)
-            MuestroRetorno(UNDELETE());
+            MuestroRetorno(UNDELETE(d,repuesto,ruta));
 
         if(tipo.compare("BF") == 0)
         {
