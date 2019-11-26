@@ -237,10 +237,10 @@ TipoRet MKDIR(Directorio &d, string nombre_directorio)
     return OK;
 }
 
-TipoRet CD(Directorio &d, string ruta)
+TipoRet CD(Directorio &d, string camino)
 {
     Directorio aux=d;
-    aux=recorrida(aux,ruta);
+    aux=recorrida(aux,camino);
     if(esVacio2(aux))
     {
         return ERROR;
@@ -254,7 +254,7 @@ TipoRet CD(Directorio &d, string ruta)
 }
 
 /// TIPO 2
-TipoRet DELETE(Directorio &d, string palabra)
+TipoRet DELETE(Directorio &d, string palabra, Archivo &repuesto, string &camino)
 {
     string arch=palabra.substr(palabra.find_last_of('/')+1);
     string dir=palabra.substr(0,palabra.find_last_of('/'));
@@ -340,7 +340,23 @@ TipoRet DELETE(Directorio &d, string palabra)
                     mini->archizq=auxizq;
                 }
             }
+            repuesto->nombreArchivo=aux->nombreArchivo;
+            repuesto->lineas=aux->lineas;
+            int x;
+            for(x=0; x<LARGO_MAX; x++)
+            {
+                repuesto->contenido[x]=aux->contenido[x];
+            }
+            camino="/"+aux->nombreArchivo;
+            while(!esVacio2(ubicacion->padre))
+            {
+                camino="/"+ubicacion->nom+camino;
+                ubicacion=ubicacion->padre;
+            }
             delete aux;
+            cout<<ubicacion->contenido->nombreArchivo<<": "<<ubicacion->contenido<<endl;
+            cout<<ubicacion->contenido->archder->nombreArchivo<<": "<<ubicacion->contenido->archder<<endl;
+            cout<<ubicacion->contenido->archizq->nombreArchivo<<": "<<ubicacion->contenido->archizq<<endl;
             return OK;
         }
     }
@@ -493,10 +509,83 @@ TipoRet PWD(Directorio d)
     return OK;
 }
 
-TipoRet RMDIR()
+/// No funcionara hasta hacer la funcion conseguir_ruta
+
+/**TipoRet RMDIR(Directorio &d, string nombre_Directorio)
 {
-    return NO_IMPLEMENTADO;
-}
+    string victima=nombre_Directorio.substr(nombre_Directorio.find_last_of('/')+1);
+    string camino=nombre_Directorio.substr(0,nombre_Directorio.find_last_of('/'));
+    string aux=conseguir_ruta(d);
+    Directorio ubicacion;
+    if(nombre_Directorio.find_last_of('/')==0)
+    {
+        ubicacion=irAraiz(d);
+    }
+    else
+    {
+        camino=nombre_Directorio.substr(0,nombre_Directorio.find_last_of('/'));
+        if(camino!=victima)
+        {
+            ubicacion=recorrida(d,camino);
+        }
+        else
+        {
+            ubicacion=d;
+        }
+    }
+    if(esVacio2(ubicacion))
+    {
+        return ERROR;
+    }
+    else
+    {
+
+        if(esVacio2(ubicacion->hijo))
+        {
+            return ERROR;
+        }
+        else
+        {
+            ubicacion=buscoDirectorioHermano(ubicacion->hijo,victima);
+            if(esVacio2(ubicacion))
+            {
+                return ERROR;
+            }
+            else
+            {
+                if(conseguir_ruta(ubicacion)==aux)
+                {
+                    return ERROR;
+                }
+                else
+                {
+                    if(aux.find(conseguir_ruta(ubicacion))>=0)
+                    {
+                        return ERROR;
+                    }
+                    else
+                    {
+                        if(ubicacion==ubicacion->padre->hijo)
+                        {
+                            ubicacion->padre->hijo=ubicacion->padre->hijo->hermano;
+                        }
+                        else
+                        {
+                            Directorio aux2=ubicacion->padre->hijo;
+                            while(aux2->hermano!=ubicacion)
+                            {
+                                aux2=aux2->hermano;
+                            }
+                            aux2->hermano=ubicacion->hermano;
+                        }
+                        delete ubicacion;
+                        return OK;
+                    }
+                }
+            }
+        }
+    }
+}*/
 
 /// OPCIONALES
 TipoRet IC(Directorio &d, string nombreArchivo, string texto)
@@ -681,10 +770,53 @@ TipoRet BC(Directorio &d,string nombreArchivo, int linea)
     }
 }
 
-TipoRet UNDELETE()
+TipoRet UNDELETE(Directorio &d, Archivo repuesto, string camino)
 {
-    //exclusivamente el ultimo
-    return NO_IMPLEMENTADO;
+    string arch=camino.substr(camino.find_last_of('/')+1);
+    string dir=camino.substr(0,camino.find_last_of('/'));
+    Directorio ubicacion;
+    if(camino.find_last_of('/')==0)
+    {
+        ubicacion=irAraiz(d);
+    }
+    else
+    {
+        dir=camino.substr(0,camino.find_last_of('/'));
+        if(dir!=arch)
+        {
+            ubicacion=recorrida(d,dir);
+        }
+        else
+        {
+            ubicacion=d;
+        }
+    }
+    if(esVacio2(ubicacion))
+    {
+        return ERROR;
+    }
+    else
+    {
+        Archivo aux=buscoArchivo(ubicacion->contenido,arch);
+        if(aux->nombreArchivo==arch)
+        {
+            return ERROR;
+        }
+        else
+        {
+            Archivo aux2=new _archivo;
+            aux2=repuesto;
+            if(aux2->nombreArchivo>aux->nombreArchivo)
+            {
+                aux->archder=aux2;
+            }
+            else
+            {
+                aux->archizq=aux2;
+            }
+            return OK;
+        }
+    }
 }
 
 TipoRet DIR_S(Directorio d)
@@ -957,11 +1089,6 @@ void muestroDirectorios(Directorio d)
     }
 }
 
-void muestroTodo(Directorio raiz)
-{
-    ///queda para despues
-}
-
 void cargarDatosDePrueba(Directorio &d)
 {
     string a;
@@ -983,7 +1110,7 @@ void cargarDatosDePrueba(Directorio &d)
 
 Directorio recorrida(Directorio d, string texto)
 {
-    string ruta,txt2;
+    string camino,txt2;
     if(texto=="/")
     {
         return irAraiz(d);
@@ -1007,8 +1134,8 @@ Directorio recorrida(Directorio d, string texto)
         while(!esVacio2(d)&&(pos!=-1))
         {
 
-            ruta=txt2.substr(0,pos);
-            d=buscoDirectorioHermano(d->hijo,ruta);
+            camino=txt2.substr(0,pos);
+            d=buscoDirectorioHermano(d->hijo,camino);
             pos=txt2.find('/');
             if(pos!=-1)
             {
