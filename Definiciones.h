@@ -15,7 +15,7 @@ typedef struct _archivo
     _archivo *archder;
 }*Archivo;
 
-typedef struct _directorio      //  /   Dir1  -> Dir11  -> Dir12 ---  Dir2 -> Dir21  -> Dir22
+typedef struct _directorio
 {
     string nom;
     Archivo contenido;
@@ -30,10 +30,10 @@ TipoRet CREATE(Directorio &d, string nombre_archivo);
 TipoRet IF(Directorio &d, string nombreArchivo, string texto);
 TipoRet TYPE(Directorio d, string nombreArchivo);
 TipoRet MKDIR(Directorio &d, string nombre_archivo);
-TipoRet CD(Directorio &d, string ruta);
+TipoRet CD(Directorio &d, string camino);
 
 /// tipo2
-TipoRet DELETE(Directorio &d, string palabra);
+TipoRet DELETE(Directorio &d, string palabra, Archivo &repuesto, string &camino);
 TipoRet BF(Directorio &d,string nombreArchivo, int linea);
 TipoRet CAT(Directorio &d, string nombreArchivo1, string nombreArchivo2);
 TipoRet PWD(Directorio d);
@@ -41,8 +41,8 @@ TipoRet RMDIR();
 
 /// opcionales
 TipoRet IC(Directorio &d, string nombreArchivo, string texto);
-TipoRet BC(Directorio &d,string nombreArchivo, int linea);
-TipoRet UNDELETE();
+TipoRet BC(Directorio &d, string nombreArchivo, int linea);
+TipoRet UNDELETE(Directorio &d, Archivo repuesto, string camino);
 TipoRet DIR_S(Directorio d);
 TipoRet COPY();
 
