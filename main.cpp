@@ -11,8 +11,8 @@ using namespace std;
 #include "Definiciones.h"
 #include "Funciones.cpp"
 
-/** TODO RMDIR, falta una funcion
-*
+/** TODO RMDIR, COPY
+    MKDIR errores con la ocurrencia = 0, no encuentra a padre;
 */
 int main()
 {
@@ -116,6 +116,9 @@ int main()
             subComando = subComando.substr(0,espacio);
             MuestroRetorno(CD(d,subComando));
         }
+
+        if(tipo.compare("RMDIR")==0)
+            MuestroRetorno(RMDIR(d,subComando));
     }
     return 0;
 }
