@@ -15,7 +15,7 @@ typedef struct _archivo
     _archivo *archder;
 }*Archivo;
 
-typedef struct _directorio
+typedef struct _directorio      //  /   Dir1  -> Dir11  -> Dir12 ---  Dir2 -> Dir21  -> Dir22
 {
     string nom;
     Archivo contenido;
@@ -33,7 +33,7 @@ TipoRet MKDIR(Directorio &d, string nombre_archivo);
 TipoRet CD(Directorio &d, string camino);
 
 /// tipo2
-TipoRet DELETE(Directorio &d, string palabra, Archivo &repuesto, string &camino);
+TipoRet DELETE(Directorio &d, std::string palabra, Archivo &repuesto, string &camino);
 TipoRet BF(Directorio &d,string nombreArchivo, int linea);
 TipoRet CAT(Directorio &d, string nombreArchivo1, string nombreArchivo2);
 TipoRet PWD(Directorio d);
@@ -41,7 +41,7 @@ TipoRet RMDIR();
 
 /// opcionales
 TipoRet IC(Directorio &d, string nombreArchivo, string texto);
-TipoRet BC(Directorio &d, string nombreArchivo, int linea);
+TipoRet BC(Directorio &d,string nombreArchivo, int linea);
 TipoRet UNDELETE(Directorio &d, Archivo repuesto, string camino);
 TipoRet DIR_S(Directorio d);
 TipoRet COPY();
@@ -73,4 +73,5 @@ Directorio irAraiz(Directorio d);
 void moverseATodos(Directorio d);
 void colorAlTexto();
 Archivo buscoMenor(Archivo a);
+string conseguir_ruta(Directorio d);
 #endif // DEFINICIONES_H_INCLUDED
